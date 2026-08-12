@@ -5,38 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Nhận Diện</title>
+    <title>AI Nhận Diện Cây</title>
 
     <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f2f2f2;
-            padding: 20px;
+        * {
+            box-sizing: border-box;
         }
 
-        h1 {
-            margin-bottom: 20px;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f8f3;
+            color: #26352a;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #2e7d32;
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 17px;
+        }
+
+
+        /* MAIN */
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px 15px;
+        }
+
+
+        /* CAMERA */
+
+        .camera-box {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
 
         button {
-            font-size: 18px;
-            padding: 12px 25px;
+            background: #2e7d32;
+            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            padding: 14px 25px;
+            font-size: 18px;
             cursor: pointer;
+            margin-bottom: 20px;
         }
 
+        button:hover {
+            background: #1b5e20;
+        }
+
+        button:disabled {
+            background: #777;
+            cursor: not-allowed;
+        }
+
+
         #webcam-container {
-            margin-top: 25px;
+            display: flex;
+            justify-content: center;
         }
 
         #webcam-container canvas {
             width: 400px;
-            max-width: 90vw;
-            border-radius: 12px;
+            max-width: 100%;
+            border-radius: 15px;
+            border: 4px solid #2e7d32;
         }
+
+
+        /* RESULT */
 
         #result {
             font-size: 30px;
@@ -44,138 +101,386 @@
             margin-top: 20px;
         }
 
+        #confidence {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+
+        /* INFORMATION */
+
         #info {
-            font-size: 22px;
-            margin-top: 15px;
+            margin-top: 25px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-card h2 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .info-card h3 {
+            color: #388e3c;
+            margin-bottom: 5px;
+        }
+
+        .info-card p {
+            line-height: 1.7;
+            margin-top: 5px;
+        }
+
+        .info-card ul {
+            line-height: 1.8;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1b5e20;
+            color: white;
+            text-align: center;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            #result {
+                font-size: 24px;
+            }
+
+            .camera-box {
+                padding: 15px;
+            }
+
         }
 
     </style>
+
 </head>
 
 
 <body>
 
-    <h1>🤖 AI Nhận Diện</h1>
 
-    <button id="startButton">
-        Bắt đầu camera
-    </button>
+    <!-- ========================= -->
+    <!-- HEADER -->
+    <!-- ========================= -->
 
-    <div id="webcam-container"></div>
+    <header>
 
-    <div id="result">
-        Chưa nhận diện
-    </div>
+        <h1>🌱 AI Nhận Diện Cây</h1>
 
-    <div id="info">
-        Hãy đưa vật thể trước camera
-    </div>
+        <p>
+            Sử dụng trí tuệ nhân tạo để nhận diện cây
+        </p>
+
+    </header>
 
 
-    <!-- TensorFlow.js -->
+    <!-- ========================= -->
+    <!-- MAIN -->
+    <!-- ========================= -->
+
+    <main>
+
+
+        <!-- CAMERA -->
+
+        <section class="camera-box">
+
+            <h2>📷 Camera AI</h2>
+
+            <p>
+                Đưa lá, quả hoặc hình ảnh của cây
+                trước camera.
+            </p>
+
+            <button id="startButton">
+                Bắt đầu camera
+            </button>
+
+
+            <div id="webcam-container"></div>
+
+
+            <div id="result">
+                Chưa nhận diện
+            </div>
+
+
+            <div id="confidence">
+                Độ chính xác: --
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================= -->
+        <!-- INFORMATION -->
+        <!-- ========================= -->
+
+        <section id="info">
+
+            <div class="info-card">
+
+                <h2>🌿 Thông tin cây</h2>
+
+                <p>
+                    Hãy bật camera và đưa cây trước camera
+                    để AI nhận diện.
+                </p>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ========================= -->
+    <!-- FOOTER -->
+    <!-- ========================= -->
+
+    <footer>
+
+        <p>
+            🌱 AI Nhận Diện Cây
+        </p>
+
+        <p>
+            Powered by Teachable Machine
+        </p>
+
+    </footer>
+
+
+
+    <!-- ========================= -->
+    <!-- TENSORFLOW -->
+    <!-- ========================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
-    <!-- Teachable Machine -->
+
+    <!-- ========================= -->
+    <!-- TEACHABLE MACHINE -->
+    <!-- ========================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
 
 
     <script>
 
+
+        // =====================================
+        // MODEL CỦA BẠN
+        // =====================================
+
         const URL =
             "https://teachablemachine.withgoogle.com/models/ZNbe19OuD/";
 
+
         let model;
+
         let webcam;
+
         let running = false;
 
+
+
+        // =====================================
+        // NÚT BẮT ĐẦU
+        // =====================================
 
         document
             .getElementById("startButton")
             .addEventListener("click", start);
 
 
+
+        // =====================================
+        // START CAMERA
+        // =====================================
+
         async function start() {
 
-            if (running) return;
 
-            document.getElementById("startButton").innerText =
-                "Đang tải AI...";
+            if (running) {
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById("startButton");
+
+
+            button.innerText =
+                "⏳ Đang tải AI...";
+
+
+            button.disabled = true;
+
 
 
             try {
 
-                model = await tmImage.load(
-                    URL + "model.json",
-                    URL + "metadata.json"
-                );
+
+                // Load model
+
+                model =
+                    await tmImage.load(
+
+                        URL + "model.json",
+
+                        URL + "metadata.json"
+
+                    );
 
 
-                webcam = new tmImage.Webcam(
-                    400,
-                    400,
-                    true
-                );
+
+                // Create webcam
+
+                webcam =
+                    new tmImage.Webcam(
+
+                        400,
+
+                        400,
+
+                        true
+
+                    );
+
 
 
                 await webcam.setup();
 
+
                 await webcam.play();
 
 
+
+                // Add camera
+
                 document
-                    .getElementById("webcam-container")
-                    .appendChild(webcam.canvas);
+                    .getElementById(
+                        "webcam-container"
+                    )
+                    .appendChild(
+                        webcam.canvas
+                    );
+
 
 
                 running = true;
 
 
-                document.getElementById("startButton").innerText =
-                    "Camera đang chạy";
+                button.innerText =
+                    "📷 Camera đang chạy";
 
 
                 loop();
+
 
             }
 
             catch (error) {
 
+
                 console.error(error);
 
-                document.getElementById("startButton").innerText =
+
+                button.disabled = false;
+
+
+                button.innerText =
                     "Bắt đầu camera";
 
-                document.getElementById("result").innerText =
-                    "Không thể mở camera";
 
-                document.getElementById("info").innerText =
-                    "Hãy cho phép Chrome sử dụng camera.";
+                document
+                    .getElementById("result")
+                    .innerText =
+                    "❌ Không thể mở camera";
+
+
+                document
+                    .getElementById("confidence")
+                    .innerText =
+                    "Hãy kiểm tra quyền sử dụng camera.";
 
             }
 
         }
 
 
+
+        // =====================================
+        // LOOP
+        // =====================================
+
         async function loop() {
 
-            if (!running) return;
+
+            if (!running) {
+
+                return;
+
+            }
+
 
             webcam.update();
 
+
             await predict();
+
 
             requestAnimationFrame(loop);
 
         }
 
 
+
+        // =====================================
+        // PREDICT
+        // =====================================
+
         async function predict() {
 
+
             const prediction =
-                await model.predict(webcam.canvas);
+                await model.predict(
+                    webcam.canvas
+                );
 
 
-            let best = prediction[0];
+
+            // Tìm class tốt nhất
+
+            let best =
+                prediction[0];
+
 
 
             for (
@@ -184,16 +489,19 @@
                 i++
             ) {
 
+
                 if (
                     prediction[i].probability >
                     best.probability
                 ) {
 
-                    best = prediction[i];
+                    best =
+                        prediction[i];
 
                 }
 
             }
+
 
 
             const name =
@@ -201,39 +509,318 @@
 
 
             const confidence =
-                (best.probability * 100).toFixed(1);
+                best.probability * 100;
 
 
-            document.getElementById("result").innerText =
-                name + " - " + confidence + "%";
+
+            // =================================
+            // HIỆN KẾT QUẢ
+            // =================================
+
+            document
+                .getElementById("result")
+                .innerText =
+                "🔎 " + name;
 
 
-            if (name === "que") {
 
-                document.getElementById("info").innerHTML =
-                    "🪵 Đây là <b>QUE</b>";
+            document
+                .getElementById("confidence")
+                .innerText =
+                "Độ chính xác: " +
+                confidence.toFixed(1) +
+                "%";
+
+
+
+            // =================================
+            // HIỆN THÔNG TIN
+            // =================================
+
+            showInformation(
+                name,
+                confidence
+            );
+
+        }
+
+
+
+        // =====================================
+        // THÔNG TIN CÂY
+        // =====================================
+
+        function showInformation(
+            name,
+            confidence
+        ) {
+
+
+            const info =
+                document.getElementById("info");
+
+
+
+            // =================================
+            // CÂY QUẾ
+            // =================================
+
+            if (
+                name.toLowerCase() === "que"
+            ) {
+
+
+                info.innerHTML = `
+
+                    <div class="info-card">
+
+                        <h2>🌿 Cây Quế</h2>
+
+
+                        <h3>📌 Tên gọi</h3>
+
+                        <p>
+                            Quế là một nhóm cây thuộc chi
+                            <i>Cinnamomum</i>.
+                            Vỏ cây thường có mùi thơm đặc trưng
+                            và được sử dụng làm gia vị.
+                        </p>
+
+
+                        <h3>🌳 Đặc điểm</h3>
+
+                        <ul>
+
+                            <li>
+                                Là cây thân gỗ.
+                            </li>
+
+                            <li>
+                                Lá thường có màu xanh
+                                và có mùi thơm đặc trưng
+                                khi vò.
+                            </li>
+
+                            <li>
+                                Vỏ thân chứa tinh dầu
+                                tạo nên mùi thơm đặc biệt.
+                            </li>
+
+                            <li>
+                                Cây có thể phát triển
+                                thành cây lâu năm.
+                            </li>
+
+                        </ul>
+
+
+                        <h3>🌱 Môi trường sống</h3>
+
+                        <p>
+                            Quế thường phát triển tốt
+                            ở những khu vực có khí hậu
+                            nhiệt đới hoặc cận nhiệt đới,
+                            đất có khả năng thoát nước tốt.
+                        </p>
+
+
+                        <h3>🍂 Bộ phận được sử dụng</h3>
+
+                        <ul>
+
+                            <li>Vỏ cây</li>
+
+                            <li>Lá</li>
+
+                            <li>Cành</li>
+
+                                </ul>
+
+
+                        <h3>🍵 Công dụng</h3>
+
+                        <p>
+                            Vỏ quế được sử dụng phổ biến
+                            làm gia vị và tạo hương thơm
+                            trong nhiều món ăn, đồ uống
+                            và sản phẩm thực phẩm.
+                        </p>
+
+
+                        <h3>⚠️ Lưu ý</h3>
+
+                        <p>
+                            Thông tin trên mang tính giáo dục.
+                            Việc sử dụng quế với mục đích
+                            sức khỏe nên được thực hiện
+                            phù hợp và không thay thế
+                            tư vấn chuyên môn.
+                        </p>
+
+                    </div>
+
+                `;
 
             }
 
 
-            else if (name === "tao do") {
 
-                document.getElementById("info").innerHTML =
-                    "🍎 Đây là <b>TÁO ĐỎ</b>";
+            // =================================
+            // TÁO ĐỎ
+            // =================================
+
+            else if (
+                name.toLowerCase() === "tao do"
+            ) {
+
+
+                info.innerHTML = `
+
+                    <div class="info-card">
+
+                        <h2>🍎 Cây Táo Đỏ</h2>
+
+
+                        <h3>📌 Tên gọi</h3>
+
+                        <p>
+                            Táo đỏ thường được dùng để
+                            chỉ quả của cây táo tàu,
+                            có tên khoa học là
+                            <i>Ziziphus jujuba</i>.
+                        </p>
+
+
+                        <h3>🌳 Đặc điểm</h3>
+
+                        <ul>
+
+                            <li>
+                                Là cây thân gỗ nhỏ
+                                hoặc cây bụi lớn.
+                            </li>
+
+                            <li>
+                                Cành thường có gai
+                                ở một số giống.
+                            </li>
+
+                            <li>
+                                Lá có màu xanh và
+                                hình dạng đặc trưng.
+                            </li>
+
+                            <li>
+                                Quả khi chín thường chuyển
+                                từ màu xanh sang màu đỏ
+                                hoặc nâu đỏ.
+                            </li>
+
+                        </ul>
+
+
+                        <h3>🍎 Đặc điểm quả</h3>
+
+                        <p>
+                            Quả táo đỏ có kích thước
+                            tương đối nhỏ. Khi chín,
+                            quả có màu đỏ nâu và vị
+                            ngọt. Quả có thể được ăn
+                            tươi hoặc sấy khô.
+                        </p>
+
+
+                        <h3>🌱 Môi trường sống</h3>
+
+                        <p>
+                            Cây táo tàu có khả năng thích nghi
+                            với nhiều điều kiện khí hậu
+                            và được trồng ở nhiều khu vực
+                            trên thế giới.
+                        </p>
+
+
+                        <h3>🍽️ Công dụng</h3>
+
+                        <ul>
+
+                            <li>
+                                Có thể dùng làm thực phẩm.
+                            </li>
+
+                            <li>
+                                Quả tươi có thể ăn trực tiếp.
+                            </li>
+
+                            <li>
+                                Quả khô được sử dụng trong
+                                một số món ăn và đồ uống.
+                            </li>
+
+                        </ul>
+
+
+                        <h3>🌿 Giá trị dinh dưỡng</h3>
+
+                        <p>
+                            Táo tàu chứa carbohydrate,
+                            chất xơ và một số vitamin
+                            cùng khoáng chất. Thành phần
+                            dinh dưỡng thay đổi tùy theo
+                            giống và cách chế biến.
+                        </p>
+
+
+                        <h3>⚠️ Lưu ý</h3>
+
+                        <p>
+                            Thông tin trên nhằm mục đích
+                            giáo dục về thực vật và thực phẩm.
+                            Không nên xem đây là lời khuyên
+                            y tế.
+                        </p>
+
+                    </div>
+
+                `;
 
             }
 
+
+
+            // =================================
+            // KHÔNG NHẬN DIỆN
+            // =================================
 
             else {
 
-                document.getElementById("info").innerText =
-                    "Không xác định";
+
+                info.innerHTML = `
+
+                    <div class="info-card">
+
+                        <h2>🌱 Chưa xác định</h2>
+
+                        <p>
+                            AI chưa nhận diện được cây.
+                        </p>
+
+                        <p>
+                            Hãy đưa cây vào giữa camera
+                            và đảm bảo hình ảnh đủ sáng.
+                        </p>
+
+                    </div>
+
+                `;
 
             }
 
         }
 
+
     </script>
+
 
 </body>
 
