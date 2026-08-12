@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>🌿 AI Nhận Diện Dược Liệu</title>
+    <title>AI Nhận Diện Dược Liệu</title>
 
     <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
@@ -13,11 +13,13 @@
     <!-- Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
 
+
     <style>
 
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -26,22 +28,39 @@
             color: #183b2b;
         }
 
+
+        /* =========================
+           HEADER
+        ========================= */
+
         header {
-            background: linear-gradient(135deg, #075e36, #0b8650);
+            background: linear-gradient(
+                135deg,
+                #075e36,
+                #0b8650
+            );
+
             color: white;
             text-align: center;
-            padding: 32px 20px;
+            padding: 35px 20px;
         }
+
 
         header h1 {
             margin: 0;
             font-size: 34px;
         }
 
+
         header p {
             margin-top: 10px;
             color: #d9f3e4;
         }
+
+
+        /* =========================
+           CONTAINER
+        ========================= */
 
         .container {
             width: 92%;
@@ -49,199 +68,330 @@
             margin: 30px auto;
         }
 
+
+        /* =========================
+           CARD
+        ========================= */
+
         .card {
             background: white;
             border-radius: 22px;
             padding: 25px;
-            margin-bottom: 22px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
         }
+
 
         .title {
             text-align: center;
             color: #075e36;
-            margin-top: 0;
         }
+
+
+        /* =========================
+           BUTTON
+        ========================= */
 
         .buttons {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             gap: 10px;
+            flex-wrap: wrap;
             margin-bottom: 20px;
         }
+
 
         button {
             border: none;
             border-radius: 12px;
+
             padding: 13px 22px;
+
             font-size: 16px;
             font-weight: bold;
+
             cursor: pointer;
         }
+
 
         #startButton {
             background: #087a47;
             color: white;
         }
 
+
         #startButton:hover {
             background: #056237;
         }
 
+
         #stopButton {
-            background: #ddd;
-            color: #555;
+            background: #dddddd;
+            color: #444;
         }
+
 
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
+
+        /* =========================
+           CAMERA
+        ========================= */
+
         #webcam-container {
+
             width: 100%;
+
             min-height: 300px;
+
             background: #edf3ef;
+
             border-radius: 18px;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
 
             overflow: hidden;
         }
 
+
         #webcam-container canvas {
+
             width: 100%;
+
             max-width: 500px;
+
             height: auto;
+
             border-radius: 16px;
         }
 
+
         .camera-placeholder {
+
             text-align: center;
+
             color: #718278;
+
             padding: 40px;
         }
 
+
         .camera-icon {
+
             font-size: 60px;
-            margin-bottom: 10px;
+
         }
+
+
+        /* =========================
+           STATUS
+        ========================= */
 
         #status {
+
             text-align: center;
+
             margin-top: 15px;
+
             padding: 12px;
+
             border-radius: 12px;
+
             background: #edf7f1;
+
             color: #087a47;
+
             font-weight: bold;
         }
+
+
+        /* =========================
+           RESULT
+        ========================= */
 
         #result-name {
+
             text-align: center;
+
             font-size: 38px;
+
             font-weight: bold;
+
             color: #075e36;
-            margin: 15px 0;
+
+            margin: 20px 0 10px;
         }
 
+
         #confidence {
+
             text-align: center;
-            font-size: 20px;
+
+            font-size: 19px;
+
             font-weight: bold;
+
             color: #087a47;
         }
 
+
+        /* =========================
+           PLANT INFO
+        ========================= */
+
         #plant-info {
+
             margin-top: 25px;
+
             padding: 25px;
+
             border-radius: 18px;
+
             background: #f1f8f4;
+
             line-height: 1.7;
         }
 
+
         #plant-info h3 {
+
             margin-top: 0;
-            font-size: 28px;
+
             color: #075e36;
+
+            font-size: 28px;
         }
 
+
         .info-row {
+
             margin-top: 13px;
         }
 
-        .info-label {
-            font-weight: bold;
-            color: #075e36;
-        }
 
         .warning {
-            margin-top: 18px;
+
+            margin-top: 20px;
+
             padding: 13px;
+
             border-radius: 10px;
+
             background: #fff8df;
+
             color: #765d00;
+
             font-size: 14px;
         }
 
+
+        /* =========================
+           NOTHING
+        ========================= */
+
         .nothing {
+
             text-align: center;
-            padding: 20px;
+
+            padding: 10px;
         }
 
+
         .nothing-icon {
+
             font-size: 60px;
         }
 
-        .nothing h3 {
-            color: #555 !important;
-        }
+
+        /* =========================
+           PREDICTIONS
+        ========================= */
 
         .prediction {
-            margin-bottom: 16px;
+
+            margin-bottom: 18px;
         }
 
+
         .prediction-header {
+
             display: flex;
+
             justify-content: space-between;
+
             margin-bottom: 6px;
         }
 
+
         .progress {
+
             height: 10px;
+
             background: #e1e9e4;
+
             border-radius: 20px;
+
             overflow: hidden;
         }
 
+
         .progress-bar {
+
             height: 100%;
+
             background: #087a47;
+
             border-radius: 20px;
+
             transition: width 0.2s;
         }
 
+
+        /* =========================
+           FOOTER
+        ========================= */
+
         footer {
+
             text-align: center;
+
             padding: 25px;
+
             color: #718278;
+
             font-size: 13px;
         }
 
-        @media(max-width:600px) {
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
 
             header h1 {
+
                 font-size: 27px;
             }
 
+
             .card {
+
                 padding: 18px;
             }
 
+
             #result-name {
+
                 font-size: 30px;
             }
 
@@ -266,7 +416,7 @@
     </h1>
 
     <p>
-        Nhận diện bằng Machine Learning
+        Nhận diện dược liệu bằng Machine Learning
     </p>
 
 </header>
@@ -363,10 +513,7 @@
         </div>
 
 
-
-        <!-- =====================================
-             PLANT INFO
-        ===================================== -->
+        <!-- PLANT INFORMATION -->
 
         <div id="plant-info">
 
@@ -397,7 +544,7 @@
 
         <div id="predictions">
 
-            <p style="text-align:center;color:#777">
+            <p style="text-align:center;color:#777;">
 
                 Chưa có dữ liệu
 
@@ -418,7 +565,7 @@
 
     <br><br>
 
-    Powered by Google Teachable Machine
+    Powered by Teachable Machine
 
 </footer>
 
@@ -451,12 +598,16 @@ let animationId = null;
 
 async function loadModel() {
 
-    if (model) {
+    if (model !== null) {
+
         return;
+
     }
 
 
-    document.getElementById("status").innerText =
+    document.getElementById(
+        "status"
+    ).innerText =
         "⏳ Đang tải Machine Learning...";
 
 
@@ -474,7 +625,20 @@ async function loadModel() {
     );
 
 
-    document.getElementById("status").innerText =
+    console.log(
+        "Model đã tải thành công"
+    );
+
+
+    console.log(
+        "Class của model:",
+        model.getClassLabels()
+    );
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
         "✓ Machine Learning đã sẵn sàng";
 
 }
@@ -488,7 +652,9 @@ async function loadModel() {
 async function startCamera() {
 
     if (running) {
+
         return;
+
     }
 
 
@@ -515,6 +681,7 @@ async function startCamera() {
 
 
         await webcam.setup();
+
 
         await webcam.play();
 
@@ -545,10 +712,15 @@ async function startCamera() {
 
         loop();
 
+    }
 
-    } catch (error) {
 
-        console.error(error);
+    catch (error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
 
 
         document.getElementById(
@@ -558,7 +730,7 @@ async function startCamera() {
 
 
         alert(
-            "Không thể mở camera. Hãy cho phép Chrome sử dụng camera."
+            "Không thể mở camera. Hãy cho phép trình duyệt sử dụng camera."
         );
 
     }
@@ -568,13 +740,15 @@ async function startCamera() {
 
 
 /* =====================================================
-   AI LOOP
+   LOOP
 ===================================================== */
 
 async function loop() {
 
     if (!running) {
+
         return;
+
     }
 
 
@@ -592,7 +766,7 @@ async function loop() {
 
 
 /* =====================================================
-   MACHINE LEARNING PREDICTION
+   PREDICT
 ===================================================== */
 
 async function predict() {
@@ -631,6 +805,10 @@ async function predict() {
     }
 
 
+    /*
+       Tên class từ Teachable Machine
+    */
+
     const name =
         best.className;
 
@@ -643,6 +821,17 @@ async function predict() {
         (
             probability * 100
         ).toFixed(1);
+
+
+    /*
+       Debug
+    */
+
+    console.log(
+        "AI nhận diện:",
+        name,
+        percent + "%"
+    );
 
 
     /*
@@ -666,14 +855,14 @@ async function predict() {
 
 
     /*
-       Chọn thông tin bằng IF / ELSE
+       Hiển thị thông tin cây
     */
 
     showPlantInfo(name);
 
 
     /*
-       Hiển thị tất cả xác suất
+       Hiển thị xác suất
     */
 
     showPredictions(
@@ -690,41 +879,48 @@ async function predict() {
 
 function getEmoji(name) {
 
-    if (name === "Rễ Tranh") {
 
-        return "🌱";
-
-    }
-
-    else if (name === "Đại Táo") {
-
-        return "🍎";
-
-    }
-
-    else if (name === "Táo Tàu") {
-
-        return "🍎";
-
-    }
-
-    else if (name === "La Hán Quả") {
-
-        return "🍈";
-
-    }
-
-    else if (name === "Quế") {
+    if (name === "quế") {
 
         return "🌿";
 
     }
 
-    else if (name === "Nothing") {
+
+    else if (name === "táo tàu") {
+
+        return "🍎";
+
+    }
+
+
+    else if (name === "la hán quả") {
+
+        return "🍈";
+
+    }
+
+
+    else if (name === "rễ tranh") {
+
+        return "🌱";
+
+    }
+
+
+    else if (name === "đại táo") {
+
+        return "🍎";
+
+    }
+
+
+    else if (name === "nothing") {
 
         return "❌";
 
     }
+
 
     else {
 
@@ -737,7 +933,7 @@ function getEmoji(name) {
 
 
 /* =====================================================
-   PLANT INFO - IF / ELSE
+   THÔNG TIN DƯỢC LIỆU
 ===================================================== */
 
 function showPlantInfo(name) {
@@ -749,411 +945,24 @@ function showPlantInfo(name) {
         );
 
 
-    /* =================================================
-       RỄ TRANH
-    ================================================= */
 
-    if (name === "Rễ Tranh") {
-
-
-        container.innerHTML = `
-
-            <h3>
-                🌱 Rễ Tranh
-            </h3>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🔬 Tên khoa học:
-                </span>
-
-                Imperata cylindrica
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌿 Tên thường gọi:
-                </span>
-
-                Rễ cỏ tranh, cỏ tranh
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📖 Mô tả:
-                </span>
-
-                Rễ tranh là phần thân rễ của cây cỏ tranh,
-                một loài cỏ sống lâu năm và thường phát triển
-                thành từng cụm.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🍃 Đặc điểm:
-                </span>
-
-                Cây có lá dài và hẹp, thân rễ phát triển
-                dưới đất, có nhiều đốt và có khả năng lan rộng.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌱 Bộ phận sử dụng:
-                </span>
-
-                Thân rễ.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📚 Công dụng truyền thống:
-                </span>
-
-                Trong y học cổ truyền, rễ tranh được sử dụng
-                trong một số bài thuốc dân gian.
-
-            </div>
-
-
-            <div class="warning">
-
-                ⚠️ Thông tin chỉ mang tính tham khảo
-                và không thay thế tư vấn y tế chuyên môn.
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* =================================================
-       ĐẠI TÁO
-    ================================================= */
-
-    else if (name === "Đại Táo") {
-
-
-        container.innerHTML = `
-
-            <h3>
-                🍎 Đại Táo
-            </h3>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🔬 Tên khoa học:
-                </span>
-
-                Ziziphus jujuba
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌿 Họ thực vật:
-                </span>
-
-                Họ Táo (Rhamnaceae)
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📖 Mô tả:
-                </span>
-
-                Đại táo là quả của cây Ziziphus jujuba.
-                Quả có thể được sử dụng ở dạng tươi hoặc
-                được phơi, sấy khô.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🍎 Đặc điểm:
-                </span>
-
-                Quả có hình tròn hoặc bầu dục.
-                Khi chín thường chuyển sang màu đỏ nâu
-                và có vị ngọt.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌱 Bộ phận sử dụng:
-                </span>
-
-                Quả.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📚 Công dụng truyền thống:
-                </span>
-
-                Đại táo thường được sử dụng trong thực phẩm
-                và trong một số bài thuốc cổ truyền.
-
-            </div>
-
-
-            <div class="warning">
-
-                ⚠️ Thông tin chỉ mang tính tham khảo
-                và không thay thế tư vấn y tế chuyên môn.
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* =================================================
-       TÁO TÀU
-    ================================================= */
-
-    else if (name === "Táo Tàu") {
-
-
-        container.innerHTML = `
-
-            <h3>
-                🍎 Táo Tàu
-            </h3>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🔬 Tên khoa học:
-                </span>
-
-                Ziziphus jujuba
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌿 Tên khác:
-                </span>
-
-                Táo đỏ, táo khô, táo tàu
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📖 Mô tả:
-                </span>
-
-                Táo tàu là tên gọi phổ biến của quả
-                Ziziphus jujuba. Quả thường được sử dụng
-                dưới dạng tươi hoặc khô.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🍎 Đặc điểm:
-                </span>
-
-                Quả có hình tròn hoặc bầu dục.
-                Khi chín có màu đỏ nâu và vị ngọt.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌱 Bộ phận sử dụng:
-                </span>
-
-                Quả.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📚 Công dụng truyền thống:
-                </span>
-
-                Thường được sử dụng trong chế biến thực phẩm,
-                trà và một số bài thuốc cổ truyền.
-
-            </div>
-
-
-            <div class="warning">
-
-                ⚠️ Thông tin chỉ mang tính tham khảo
-                và không thay thế tư vấn y tế chuyên môn.
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* =================================================
-       LA HÁN QUẢ
-    ================================================= */
-
-    else if (name === "La Hán Quả") {
-
-
-        container.innerHTML = `
-
-            <h3>
-                🍈 La Hán Quả
-            </h3>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🔬 Tên khoa học:
-                </span>
-
-                Siraitia grosvenorii
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌿 Họ thực vật:
-                </span>
-
-                Họ Bầu bí (Cucurbitaceae)
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📖 Mô tả:
-                </span>
-
-                La Hán quả là quả của một loại cây dây leo.
-                Loài cây này có nguồn gốc từ khu vực miền Nam
-                Trung Quốc.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🍈 Đặc điểm:
-                </span>
-
-                Quả có hình tròn, vỏ cứng.
-                Quả khô thường có màu nâu và có vị ngọt
-                đặc trưng.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    🌱 Bộ phận sử dụng:
-                </span>
-
-                Quả.
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span class="info-label">
-                    📚 Công dụng:
-                </span>
-
-                La Hán quả thường được sử dụng để tạo vị ngọt
-                cho một số loại đồ uống và sản phẩm thực phẩm.
-
-            </div>
-
-
-            <div class="warning">
-
-                ⚠️ Thông tin chỉ mang tính tham khảo
-                và không thay thế tư vấn y tế chuyên môn.
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* =================================================
+    /* ================================================
        QUẾ
     ================================================= */
 
-    else if (name === "Quế") {
+    if (name === "quế") {
 
 
         container.innerHTML = `
 
             <h3>
-                🌿 Quế
+                🌿 quế
             </h3>
 
 
             <div class="info-row">
 
-                <span class="info-label">
-                    🔬 Tên khoa học:
-                </span>
+                <b>🔬 tên khoa học:</b>
 
                 Cinnamomum spp.
 
@@ -1162,46 +971,37 @@ function showPlantInfo(name) {
 
             <div class="info-row">
 
-                <span class="info-label">
-                    🌿 Họ thực vật:
-                </span>
+                <b>🌿 họ thực vật:</b>
 
-                Họ Long não (Lauraceae)
+                Lauraceae
 
             </div>
 
 
             <div class="info-row">
 
-                <span class="info-label">
-                    📖 Mô tả:
-                </span>
+                <b>📖 mô tả:</b>
 
                 Quế là nhóm cây thuộc chi Cinnamomum.
-                Vỏ cây có mùi thơm đặc trưng và được
-                sử dụng phổ biến làm gia vị.
+                Vỏ cây có mùi thơm đặc trưng.
 
             </div>
 
 
             <div class="info-row">
 
-                <span class="info-label">
-                    🍃 Đặc điểm:
-                </span>
+                <b>🍃 đặc điểm:</b>
 
-                Cây quế thường là cây thân gỗ.
-                Vỏ cây có mùi thơm đặc trưng, lá màu xanh
-                và có các đường gân rõ.
+                Cây thường là cây thân gỗ.
+                Vỏ có mùi thơm đặc trưng,
+                lá có các đường gân rõ.
 
             </div>
 
 
             <div class="info-row">
 
-                <span class="info-label">
-                    🌱 Bộ phận sử dụng:
-                </span>
+                <b>🌱 bộ phận sử dụng:</b>
 
                 Vỏ cây.
 
@@ -1210,11 +1010,9 @@ function showPlantInfo(name) {
 
             <div class="info-row">
 
-                <span class="info-label">
-                    📚 Công dụng:
-                </span>
+                <b>📚 công dụng:</b>
 
-                Vỏ quế được sử dụng phổ biến làm gia vị
+                Thường được sử dụng làm gia vị
                 và trong một số sản phẩm truyền thống.
 
             </div>
@@ -1222,8 +1020,8 @@ function showPlantInfo(name) {
 
             <div class="warning">
 
-                ⚠️ Thông tin chỉ mang tính tham khảo
-                và không thay thế tư vấn y tế chuyên môn.
+                ⚠️ thông tin chỉ mang tính tham khảo
+                và không thay thế tư vấn y tế.
 
             </div>
 
@@ -1232,11 +1030,355 @@ function showPlantInfo(name) {
     }
 
 
-    /* =================================================
+
+    /* ================================================
+       TÁO TÀU
+    ================================================= */
+
+    else if (name === "táo tàu") {
+
+
+        container.innerHTML = `
+
+            <h3>
+                🍎 táo tàu
+            </h3>
+
+
+            <div class="info-row">
+
+                <b>🔬 tên khoa học:</b>
+
+                Ziziphus jujuba
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌿 họ thực vật:</b>
+
+                Rhamnaceae
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📖 mô tả:</b>
+
+                Táo tàu là quả của cây
+                Ziziphus jujuba,
+                thường được sử dụng
+                ở dạng tươi hoặc khô.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🍎 đặc điểm:</b>
+
+                Quả có hình tròn hoặc bầu dục.
+                Khi chín thường có màu đỏ nâu
+                và vị ngọt.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌱 bộ phận sử dụng:</b>
+
+                Quả.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📚 công dụng:</b>
+
+                Thường được sử dụng trong thực phẩm
+                và một số bài thuốc cổ truyền.
+
+            </div>
+
+
+            <div class="warning">
+
+                ⚠️ thông tin chỉ mang tính tham khảo
+                và không thay thế tư vấn y tế.
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* ================================================
+       LA HÁN QUẢ
+    ================================================= */
+
+    else if (name === "la hán quả") {
+
+
+        container.innerHTML = `
+
+            <h3>
+                🍈 la hán quả
+            </h3>
+
+
+            <div class="info-row">
+
+                <b>🔬 tên khoa học:</b>
+
+                Siraitia grosvenorii
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌿 họ thực vật:</b>
+
+                Cucurbitaceae
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📖 mô tả:</b>
+
+                La Hán quả là quả của một loài
+                cây dây leo thuộc họ Bầu bí.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🍈 đặc điểm:</b>
+
+                Quả có hình tròn và vỏ cứng.
+                Quả khô thường có màu nâu.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌱 bộ phận sử dụng:</b>
+
+                Quả.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📚 công dụng:</b>
+
+                Thường được sử dụng để tạo vị ngọt
+                cho một số loại đồ uống và thực phẩm.
+
+            </div>
+
+
+            <div class="warning">
+
+                ⚠️ thông tin chỉ mang tính tham khảo
+                và không thay thế tư vấn y tế.
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* ================================================
+       RỄ TRANH
+    ================================================= */
+
+    else if (name === "rễ tranh") {
+
+
+        container.innerHTML = `
+
+            <h3>
+                🌱 rễ tranh
+            </h3>
+
+
+            <div class="info-row">
+
+                <b>🔬 tên khoa học:</b>
+
+                Imperata cylindrica
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌿 tên thường gọi:</b>
+
+                cỏ tranh, rễ cỏ tranh
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📖 mô tả:</b>
+
+                Rễ tranh là phần thân rễ của cây
+                cỏ tranh, một loài cỏ sống lâu năm.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🍃 đặc điểm:</b>
+
+                Cây có lá dài và hẹp.
+                Thân rễ phát triển dưới đất
+                và có khả năng lan rộng.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌱 bộ phận sử dụng:</b>
+
+                Thân rễ.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📚 công dụng:</b>
+
+                Được sử dụng trong một số bài thuốc
+                dân gian và y học cổ truyền.
+
+            </div>
+
+
+            <div class="warning">
+
+                ⚠️ thông tin chỉ mang tính tham khảo
+                và không thay thế tư vấn y tế.
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* ================================================
+       ĐẠI TÁO
+    ================================================= */
+
+    else if (name === "đại táo") {
+
+
+        container.innerHTML = `
+
+            <h3>
+                🍎 đại táo
+            </h3>
+
+
+            <div class="info-row">
+
+                <b>🔬 tên khoa học:</b>
+
+                Ziziphus jujuba
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌿 họ thực vật:</b>
+
+                Rhamnaceae
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📖 mô tả:</b>
+
+                Đại táo là quả của cây
+                Ziziphus jujuba,
+                thường được sử dụng
+                ở dạng tươi hoặc khô.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🍎 đặc điểm:</b>
+
+                Quả có hình tròn hoặc bầu dục.
+                Khi chín có màu đỏ nâu
+                và vị ngọt.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>🌱 bộ phận sử dụng:</b>
+
+                Quả.
+
+            </div>
+
+
+            <div class="info-row">
+
+                <b>📚 công dụng:</b>
+
+                Thường được sử dụng trong thực phẩm
+                và một số bài thuốc cổ truyền.
+
+            </div>
+
+
+            <div class="warning">
+
+                ⚠️ thông tin chỉ mang tính tham khảo
+                và không thay thế tư vấn y tế.
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* ================================================
        NOTHING
     ================================================= */
 
-    else if (name === "Nothing") {
+    else if (name === "nothing") {
 
 
         container.innerHTML = `
@@ -1249,23 +1391,19 @@ function showPlantInfo(name) {
 
 
                 <h3>
-                    Chưa thấy loại cây nào
+                    chưa thấy loại cây nào
                 </h3>
 
 
                 <p>
-
                     AI chưa phát hiện được
                     loại dược liệu nào.
-
                 </p>
 
 
                 <p>
-
-                    Hãy đưa dược liệu vào giữa
-                    khung hình và thử lại.
-
+                    hãy đưa vật thể vào giữa
+                    khung hình để AI nhận diện.
                 </p>
 
             </div>
@@ -1275,8 +1413,9 @@ function showPlantInfo(name) {
     }
 
 
-    /* =================================================
-       KHÔNG XÁC ĐỊNH
+
+    /* ================================================
+       CLASS KHÔNG TỒN TẠI
     ================================================= */
 
     else {
@@ -1285,17 +1424,35 @@ function showPlantInfo(name) {
         container.innerHTML = `
 
             <h3>
-                🌿 Chưa xác định
+                ❓ không xác định
             </h3>
+
 
             <p>
 
-                AI nhận được một class
-                chưa có thông tin trong hệ thống.
+                AI đã nhận diện class:
+
+                <b>
+                    ${name}
+                </b>
+
+            </p>
+
+
+            <p>
+
+                class này chưa được khai báo
+                trong hệ thống.
 
             </p>
 
         `;
+
+
+        console.log(
+            "CLASS KHÔNG KHỚP:",
+            name
+        );
 
     }
 
@@ -1304,10 +1461,12 @@ function showPlantInfo(name) {
 
 
 /* =====================================================
-   HIỂN THỊ TẤT CẢ XÁC SUẤT
+   HIỂN THỊ XÁC SUẤT
 ===================================================== */
 
-function showPredictions(predictions) {
+function showPredictions(
+    predictions
+) {
 
 
     const container =
@@ -1319,82 +1478,87 @@ function showPredictions(predictions) {
     container.innerHTML = "";
 
 
-    predictions
-        .sort(
-            function(a, b) {
+    /*
+       Sắp xếp từ cao xuống thấp
+    */
 
-                return (
-                    b.probability -
-                    a.probability
+    predictions.sort(
+        function(a, b) {
+
+            return (
+                b.probability -
+                a.probability
+            );
+
+        }
+    );
+
+
+    predictions.forEach(
+        function(prediction) {
+
+
+            const percent =
+                (
+                    prediction.probability *
+                    100
+                ).toFixed(1);
+
+
+            const div =
+                document.createElement(
+                    "div"
                 );
 
-            }
-        )
-        .forEach(
-            function(prediction) {
+
+            div.className =
+                "prediction";
 
 
-                const percent =
-                    (
-                        prediction.probability *
-                        100
-                    ).toFixed(1);
+            div.innerHTML = `
+
+                <div class="prediction-header">
+
+                    <span>
+
+                        ${getEmoji(
+                            prediction.className
+                        )}
+
+                        ${prediction.className}
+
+                    </span>
 
 
-                const div =
-                    document.createElement(
-                        "div"
-                    );
+                    <strong>
+
+                        ${percent}%
+
+                    </strong>
+
+                </div>
 
 
-                div.className =
-                    "prediction";
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="
+                            width: ${percent}%;
+                        "
+                    ></div>
+
+                </div>
+
+            `;
 
 
-                div.innerHTML = `
+            container.appendChild(
+                div
+            );
 
-                    <div class="prediction-header">
-
-                        <span>
-
-                            ${getEmoji(
-                                prediction.className
-                            )}
-
-                            ${prediction.className}
-
-                        </span>
-
-
-                        <strong>
-
-                            ${percent}%
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="progress">
-
-                        <div
-                            class="progress-bar"
-                            style="
-                                width:${percent}%;
-                            "
-                        ></div>
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    div
-                );
-
-            }
-        );
+        }
+    );
 
 }
 
@@ -1410,7 +1574,7 @@ function stopCamera() {
     running = false;
 
 
-    if (animationId) {
+    if (animationId !== null) {
 
         cancelAnimationFrame(
             animationId
@@ -1421,7 +1585,7 @@ function stopCamera() {
     }
 
 
-    if (webcam) {
+    if (webcam !== null) {
 
         webcam.stop();
 
@@ -1441,7 +1605,7 @@ function stopCamera() {
             </div>
 
             <p>
-                Camera đã dừng
+                camera đã dừng
             </p>
 
         </div>
@@ -1462,19 +1626,19 @@ function stopCamera() {
     document.getElementById(
         "status"
     ).innerText =
-        "Camera đã dừng";
+        "camera đã dừng";
 
 
     document.getElementById(
         "result-name"
     ).innerText =
-        "Chưa nhận diện";
+        "chưa nhận diện";
 
 
     document.getElementById(
         "confidence"
     ).innerText =
-        "Độ chính xác: --%";
+        "độ chính xác: --%";
 
 
     document.getElementById(
@@ -1482,11 +1646,11 @@ function stopCamera() {
     ).innerHTML = `
 
         <h3>
-            🌱 Thông tin dược liệu
+            🌱 thông tin dược liệu
         </h3>
 
         <p>
-            Hãy bắt đầu camera để nhận diện.
+            hãy bắt đầu camera để nhận diện.
         </p>
 
     `;
@@ -1501,7 +1665,7 @@ function stopCamera() {
             color:#777;
         ">
 
-            Chưa có dữ liệu
+            chưa có dữ liệu
 
         </p>
 
@@ -1512,21 +1676,18 @@ function stopCamera() {
 
 
 /* =====================================================
-   KHI ĐÓNG TRANG
+   DEBUG MODEL
 ===================================================== */
 
-window.addEventListener(
-    "beforeunload",
-    function() {
-
-        if (webcam) {
-
-            webcam.stop();
-
-        }
-
-    }
+console.log(
+    "AI nhận diện dược liệu đã sẵn sàng."
 );
+
+console.log(
+    "model:",
+    MODEL_URL
+);
+
 
 </script>
 
