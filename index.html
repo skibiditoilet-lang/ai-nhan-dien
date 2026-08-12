@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>🌿 AI Nhận Diện Cây</title>
+    <title>🌿 AI Nhận Diện Dược Liệu</title>
 
-    <!-- TensorFlow.js -->
+    <!-- TensorFlow -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 
     <!-- Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
-
 
     <style>
 
@@ -20,52 +19,40 @@
             box-sizing: border-box;
         }
 
-
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #f1f8f4;
+            background: #eef7f1;
             color: #183b2b;
         }
-
-
-        /* HEADER */
 
         header {
             background: linear-gradient(
                 135deg,
                 #075e36,
-                #0b7a48
+                #0b8650
             );
 
             color: white;
             text-align: center;
-            padding: 28px 20px;
+            padding: 32px 20px;
         }
-
 
         header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 34px;
         }
-
 
         header p {
-            margin: 8px 0 0;
-            color: #d8f3e3;
+            margin-top: 10px;
+            color: #d9f3e4;
         }
-
-
-        /* MAIN */
 
         .container {
             width: 92%;
             max-width: 900px;
             margin: 30px auto;
         }
-
-
-        /* CARD */
 
         .card {
             background: white;
@@ -74,78 +61,57 @@
             margin-bottom: 22px;
 
             box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.08);
+                0 8px 25px
+                rgba(0,0,0,0.08);
         }
-
 
         .title {
             text-align: center;
-            margin-top: 0;
             color: #075e36;
+            margin-top: 0;
         }
-
-
-        /* BUTTON */
 
         .buttons {
             display: flex;
-            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 20px;
         }
-
 
         button {
             border: none;
             border-radius: 12px;
             padding: 13px 22px;
-
             font-size: 16px;
             font-weight: bold;
-
             cursor: pointer;
-
-            transition: 0.2s;
         }
-
 
         #startButton {
             background: #087a47;
             color: white;
         }
 
-
         #startButton:hover {
             background: #056237;
         }
-
 
         #stopButton {
             background: #ddd;
             color: #555;
         }
 
-
-        #stopButton:hover {
-            background: #ccc;
-        }
-
-
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-
-        /* CAMERA */
 
         #webcam-container {
             width: 100%;
             min-height: 300px;
 
             background: #edf3ef;
-
             border-radius: 18px;
 
             display: flex;
@@ -155,152 +121,158 @@
             overflow: hidden;
         }
 
-
         #webcam-container canvas {
             width: 100%;
             max-width: 500px;
             height: auto;
-
             border-radius: 16px;
         }
 
-
         .camera-placeholder {
-            color: #718278;
             text-align: center;
+            color: #718278;
             padding: 40px;
         }
 
-
-        .camera-placeholder .icon {
+        .camera-icon {
             font-size: 60px;
             margin-bottom: 10px;
         }
 
-
-        /* STATUS */
-
         #status {
             text-align: center;
-
             margin-top: 15px;
-
             padding: 12px;
 
             border-radius: 12px;
 
             background: #edf7f1;
-
             color: #087a47;
 
             font-weight: bold;
         }
 
-
-        /* RESULT */
-
-        .result-card {
-            text-align: center;
-        }
-
-
         #result-name {
-            font-size: 36px;
+            text-align: center;
+
+            font-size: 38px;
             font-weight: bold;
 
             color: #075e36;
 
-            margin: 10px 0;
+            margin: 15px 0;
         }
 
-
         #confidence {
-            font-size: 18px;
+            text-align: center;
 
+            font-size: 20px;
             font-weight: bold;
 
             color: #087a47;
         }
 
+        #plant-info {
+            margin-top: 25px;
 
-        #result-info {
+            padding: 22px;
+
+            border-radius: 18px;
+
+            background: #f1f8f4;
+
+            line-height: 1.7;
+        }
+
+        #plant-info h3 {
+            margin-top: 0;
+
+            font-size: 28px;
+
+            color: #075e36;
+        }
+
+        .info-row {
+            margin-top: 12px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #075e36;
+        }
+
+        .warning {
             margin-top: 18px;
 
-            background: #f0f8f3;
+            padding: 12px;
 
-            padding: 18px;
+            border-radius: 10px;
 
-            border-radius: 15px;
+            background: #fff8df;
 
-            text-align: left;
+            color: #765d00;
 
-            line-height: 1.6;
+            font-size: 14px;
         }
 
-
-        /* PROGRESS */
-
-        .prediction-list {
-            margin-top: 20px;
+        .nothing-box {
+            text-align: center;
+            padding: 20px;
         }
 
-
-        .prediction-item {
-            margin-bottom: 13px;
+        .nothing-box .icon {
+            font-size: 55px;
         }
 
+        .nothing-box h3 {
+            color: #555 !important;
+        }
+
+        .prediction {
+            margin-bottom: 16px;
+        }
 
         .prediction-header {
             display: flex;
             justify-content: space-between;
 
-            margin-bottom: 5px;
-
-            font-size: 14px;
+            margin-bottom: 6px;
         }
-
 
         .progress {
             height: 10px;
 
-            background: #e3ebe6;
+            background: #e1e9e4;
 
             border-radius: 20px;
 
             overflow: hidden;
         }
 
-
         .progress-bar {
             height: 100%;
 
-            background: #0b8a50;
+            background: #087a47;
 
             border-radius: 20px;
 
             transition: width 0.2s;
         }
 
-
-        /* FOOTER */
-
         footer {
             text-align: center;
 
             padding: 25px;
 
-            color: #6d7d73;
+            color: #718278;
 
             font-size: 13px;
         }
 
-
-        /* MOBILE */
-
-        @media (max-width: 600px) {
+        @media(max-width:600px) {
 
             header h1 {
-                font-size: 26px;
+                font-size: 27px;
             }
 
             .card {
@@ -314,34 +286,25 @@
         }
 
     </style>
-
 </head>
 
 
 <body>
 
 
-<!-- ====================================== -->
-<!-- HEADER -->
-<!-- ====================================== -->
-
 <header>
 
     <h1>
-        🌿 AI Nhận Diện Cây
+        🌿 AI Nhận Diện Dược Liệu
     </h1>
 
     <p>
-        Sử dụng trí tuệ nhân tạo để nhận diện dược liệu
+        Nhận diện bằng Machine Learning
     </p>
 
 </header>
 
 
-
-<!-- ====================================== -->
-<!-- MAIN -->
-<!-- ====================================== -->
 
 <div class="container">
 
@@ -354,7 +317,6 @@
             📷 Camera AI
         </h2>
 
-
         <div class="buttons">
 
             <button
@@ -364,7 +326,6 @@
                 📷 Bắt đầu camera
 
             </button>
-
 
             <button
                 id="stopButton"
@@ -378,20 +339,17 @@
         </div>
 
 
-
-        <!-- CAMERA -->
-
         <div id="webcam-container">
 
             <div class="camera-placeholder">
 
-                <div class="icon">
+                <div class="camera-icon">
                     📷
                 </div>
 
                 <div>
                     Nhấn "Bắt đầu camera"
-                    để bắt đầu nhận diện
+                    để nhận diện
                 </div>
 
             </div>
@@ -399,24 +357,17 @@
         </div>
 
 
-
-        <!-- STATUS -->
-
         <div id="status">
-
             Chưa khởi động camera
-
         </div>
 
     </div>
 
 
 
-    <!-- ====================================== -->
-    <!-- RESULT -->
-    <!-- ====================================== -->
+    <!-- KẾT QUẢ -->
 
-    <div class="card result-card">
+    <div class="card">
 
         <h2 class="title">
             🤖 Kết quả nhận diện
@@ -424,30 +375,26 @@
 
 
         <div id="result-name">
-
             Chưa nhận diện
-
         </div>
 
 
         <div id="confidence">
-
             Độ chính xác: --%
-
         </div>
 
 
-        <div id="result-info">
+        <!-- PLANT INFO -->
 
-            <strong>
-                🌱 Thông tin cây
-            </strong>
+        <div id="plant-info">
 
-            <p id="info-text">
+            <h3>
+                🌱 Plant Info
+            </h3>
 
-                Hãy đưa cây hoặc dược liệu
-                trước camera để AI nhận diện.
-
+            <p>
+                Hãy đưa dược liệu trước camera
+                để AI nhận diện.
             </p>
 
         </div>
@@ -456,23 +403,22 @@
 
 
 
-    <!-- ====================================== -->
-    <!-- ALL PREDICTIONS -->
-    <!-- ====================================== -->
+    <!-- ĐỘ CHÍNH XÁC -->
 
     <div class="card">
 
         <h2 class="title">
-            📊 Các kết quả dự đoán
+            📊 Phân tích Machine Learning
         </h2>
 
 
-        <div
-            id="prediction-list"
-            class="prediction-list">
+        <div id="predictions">
 
-            <p style="text-align:center;color:#777;">
-                Chưa có dữ liệu.
+            <p style="
+                text-align:center;
+                color:#777;
+            ">
+                Chưa có dữ liệu
             </p>
 
         </div>
@@ -484,14 +430,11 @@
 
 
 
-<!-- ====================================== -->
-<!-- FOOTER -->
-<!-- ====================================== -->
-
 <footer>
 
-    🌿 AI Nhận Diện Cây
-    <br>
+    🌿 AI Nhận Diện Dược Liệu
+
+    <br><br>
 
     Powered by Teachable Machine
 
@@ -499,18 +442,12 @@
 
 
 
-<!-- ====================================== -->
-<!-- JAVASCRIPT -->
-<!-- ====================================== -->
-
 <script>
 
 
-/*
-================================================
-MODEL TEACHABLE MACHINE
-================================================
-*/
+/* =================================================
+   MODEL TEACHABLE MACHINE
+================================================= */
 
 const MODEL_URL =
     "https://teachablemachine.withgoogle.com/models/jqsvfVlzv/";
@@ -520,102 +457,160 @@ let model = null;
 
 let webcam = null;
 
-let isRunning = false;
+let running = false;
 
 let animationId = null;
 
 
 
-/*
-================================================
-THÔNG TIN CÂY
-================================================
-
-Nếu tên class trong Teachable Machine
-trùng với các tên bên dưới thì web
-sẽ hiện thông tin tương ứng.
-
-Bạn có thể thêm cây mới vào đây.
-================================================
-*/
+/* =================================================
+   PLANT INFO
+================================================= */
 
 const plantInfo = {
 
+
+    /* =============================================
+       RỄ TRANH
+    ============================================= */
+
+    "Rễ Tranh": {
+
+        emoji: "🌱",
+
+        scientific:
+            "Imperata cylindrica",
+
+        description:
+            "Rễ tranh là phần rễ của cây tranh, một loại cỏ sống lâu năm thường mọc ở nhiều khu vực nhiệt đới.",
+
+        parts:
+            "Rễ là bộ phận được sử dụng.",
+
+        characteristics:
+            "Cây có thân rễ phát triển dưới đất. Lá dài, hẹp và mọc từ gốc.",
+
+        use:
+            "Trong y học cổ truyền, rễ tranh được sử dụng trong một số bài thuốc dân gian.",
+
+        note:
+            "Thông tin trên mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia y tế."
+
+    },
+
+
+    /* =============================================
+       ĐẠI TÁO
+    ============================================= */
+
+    "Đại Táo": {
+
+        emoji: "🍎",
+
+        scientific:
+            "Ziziphus jujuba",
+
+        description:
+            "Đại táo là quả của cây Ziziphus jujuba, thuộc họ Táo. Quả có thể được sử dụng khi tươi hoặc phơi, sấy khô.",
+
+        parts:
+            "Quả là bộ phận thường được sử dụng.",
+
+        characteristics:
+            "Quả có hình tròn hoặc bầu dục. Khi chín thường chuyển sang màu đỏ nâu và có vị ngọt.",
+
+        use:
+            "Đại táo thường được sử dụng trong thực phẩm và một số bài thuốc cổ truyền.",
+
+        note:
+            "Thông tin trên mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia y tế."
+
+    },
+
+
+    /* =============================================
+       TÁO TÀU
+    ============================================= */
+
+    "Táo Tàu": {
+
+        emoji: "🍎",
+
+        scientific:
+            "Ziziphus jujuba",
+
+        description:
+            "Táo tàu là tên gọi phổ biến của quả Ziziphus jujuba. Quả thường được sử dụng dưới dạng tươi hoặc khô.",
+
+        parts:
+            "Quả là bộ phận thường được sử dụng.",
+
+        characteristics:
+            "Quả có kích thước nhỏ đến trung bình, hình tròn hoặc bầu dục và có màu đỏ nâu khi chín.",
+
+        use:
+            "Được sử dụng phổ biến trong ẩm thực và y học cổ truyền.",
+
+        note:
+            "Thông tin trên mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia y tế."
+
+    },
+
+
+    /* =============================================
+       LA HÁN QUẢ
+    ============================================= */
+
+    "La Hán Quả": {
+
+        emoji: "🍈",
+
+        scientific:
+            "Siraitia grosvenorii",
+
+        description:
+            "La Hán quả là quả của cây Siraitia grosvenorii, một loại cây dây leo thuộc họ Bầu bí.",
+
+        parts:
+            "Quả là bộ phận được sử dụng.",
+
+        characteristics:
+            "Quả có hình tròn, vỏ cứng và thường có màu xanh khi còn tươi. Quả khô thường có màu nâu.",
+
+        use:
+            "La Hán quả thường được sử dụng để tạo vị ngọt trong đồ uống và trong một số sản phẩm truyền thống.",
+
+        note:
+            "Thông tin trên mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia y tế."
+
+    },
+
+
+    /* =============================================
+       QUẾ
+    ============================================= */
 
     "Quế": {
 
         emoji: "🌿",
 
-        description:
-            "Quế là nhóm cây thuộc chi Cinnamomum, thường có mùi thơm đặc trưng. Vỏ quế được sử dụng phổ biến trong ẩm thực.",
-
-        parts:
-            "Vỏ cây thường là bộ phận được sử dụng.",
-
-    },
-
-
-    "Táo đỏ": {
-
-        emoji: "🍎",
+        scientific:
+            "Cinnamomum spp.",
 
         description:
-            "Táo đỏ thường được dùng để chỉ quả táo tàu (Ziziphus jujuba). Quả có thể được sử dụng tươi hoặc sấy khô.",
+            "Quế là nhóm cây thuộc chi Cinnamomum. Vỏ cây có mùi thơm đặc trưng và được sử dụng rộng rãi làm gia vị.",
 
         parts:
-            "Quả là bộ phận thường được sử dụng.",
+            "Vỏ cây là bộ phận thường được sử dụng.",
 
-    },
+        characteristics:
+            "Quế thường là cây thân gỗ. Vỏ có mùi thơm đặc trưng, lá màu xanh và có các đường gân rõ.",
 
+        use:
+            "Vỏ quế được sử dụng phổ biến trong ẩm thực và một số sản phẩm truyền thống.",
 
-    "Gừng": {
-
-        emoji: "🫚",
-
-        description:
-            "Gừng là cây thân thảo có thân rễ phát triển dưới mặt đất và có mùi thơm, vị cay đặc trưng.",
-
-        parts:
-            "Thân rễ thường được sử dụng.",
-
-    },
-
-
-    "Nghệ": {
-
-        emoji: "🌱",
-
-        description:
-            "Nghệ là cây thân thảo thuộc họ Gừng, có thân rễ màu vàng cam đặc trưng.",
-
-        parts:
-            "Thân rễ thường được sử dụng.",
-
-    },
-
-
-    "Lá trầu không": {
-
-        emoji: "🍃",
-
-        description:
-            "Lá trầu không là lá của cây trầu không, có hình dạng đặc trưng và mùi thơm.",
-
-        parts:
-            "Lá là bộ phận thường được sử dụng.",
-
-    },
-
-
-    "Không xác định": {
-
-        emoji: "❓",
-
-        description:
-            "AI chưa xác định được loại cây.",
-
-        parts:
-            "Hãy thử đưa vật thể gần camera hơn và đảm bảo ánh sáng đủ.",
+        note:
+            "Thông tin trên mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia y tế."
 
     }
 
@@ -623,74 +618,9 @@ const plantInfo = {
 
 
 
-/*
-================================================
-TÌM THÔNG TIN CÂY
-================================================
-*/
-
-function getPlantInfo(className) {
-
-
-    /*
-    Tìm chính xác
-    */
-
-    if (plantInfo[className]) {
-
-        return plantInfo[className];
-
-    }
-
-
-    /*
-    Tìm không phân biệt hoa thường
-    */
-
-    const normalized =
-        className
-            .trim()
-            .toLowerCase();
-
-
-    for (const key in plantInfo) {
-
-        if (
-            key.toLowerCase() === normalized
-        ) {
-
-            return plantInfo[key];
-
-        }
-
-    }
-
-
-    /*
-    Nếu class mới chưa có thông tin
-    */
-
-    return {
-
-        emoji: "🌿",
-
-        description:
-            "AI đã nhận diện được lớp này từ model Teachable Machine.",
-
-        parts:
-            "Bạn có thể thêm thông tin chi tiết cho loại cây này vào biến plantInfo trong code."
-
-    };
-
-}
-
-
-
-/*
-================================================
-LOAD MODEL
-================================================
-*/
+/* =================================================
+   LOAD MODEL
+================================================= */
 
 async function loadModel() {
 
@@ -702,16 +632,20 @@ async function loadModel() {
     }
 
 
-    document.getElementById("status").innerText =
-        "⏳ Đang tải model AI...";
+    document.getElementById(
+        "status"
+    ).innerText =
+        "⏳ Đang tải Machine Learning...";
 
 
     const modelURL =
-        MODEL_URL + "model.json";
+        MODEL_URL +
+        "model.json";
 
 
     const metadataURL =
-        MODEL_URL + "metadata.json";
+        MODEL_URL +
+        "metadata.json";
 
 
     model =
@@ -721,23 +655,23 @@ async function loadModel() {
         );
 
 
-    document.getElementById("status").innerText =
-        "✓ Model AI đã sẵn sàng";
+    document.getElementById(
+        "status"
+    ).innerText =
+        "✓ Machine Learning đã sẵn sàng";
 
 }
 
 
 
-/*
-================================================
-START CAMERA
-================================================
-*/
+/* =================================================
+   START CAMERA
+================================================= */
 
 async function startCamera() {
 
 
-    if (isRunning) {
+    if (running) {
 
         return;
 
@@ -747,17 +681,8 @@ async function startCamera() {
     try {
 
 
-        /*
-        Tải model
-        */
-
         await loadModel();
 
-
-
-        /*
-        Xóa camera cũ
-        */
 
         const container =
             document.getElementById(
@@ -767,15 +692,6 @@ async function startCamera() {
 
         container.innerHTML = "";
 
-
-
-        /*
-        Tạo webcam
-
-        400 = chiều rộng
-        400 = chiều cao
-        true = lật camera
-        */
 
         webcam =
             new tmImage.Webcam(
@@ -791,18 +707,13 @@ async function startCamera() {
         await webcam.play();
 
 
-
         container.appendChild(
             webcam.canvas
         );
 
 
-        isRunning = true;
+        running = true;
 
-
-        /*
-        Đổi trạng thái button
-        */
 
         document.getElementById(
             "startButton"
@@ -817,17 +728,10 @@ async function startCamera() {
         document.getElementById(
             "status"
         ).innerText =
-            "🟢 Camera đang hoạt động";
+            "🟢 AI đang nhận diện";
 
 
-        /*
-        Bắt đầu vòng lặp
-        */
-
-        animationId =
-            window.requestAnimationFrame(
-                loop
-            );
+        loop();
 
 
     } catch (error) {
@@ -843,7 +747,7 @@ async function startCamera() {
 
 
         alert(
-            "Không thể mở camera. Hãy kiểm tra quyền sử dụng camera của Chrome."
+            "Không thể mở camera. Hãy cho phép Chrome sử dụng camera."
         );
 
     }
@@ -852,16 +756,14 @@ async function startCamera() {
 
 
 
-/*
-================================================
-LOOP
-================================================
-*/
+/* =================================================
+   LOOP
+================================================= */
 
 async function loop() {
 
 
-    if (!isRunning) {
+    if (!running) {
 
         return;
 
@@ -875,7 +777,7 @@ async function loop() {
 
 
     animationId =
-        window.requestAnimationFrame(
+        requestAnimationFrame(
             loop
         );
 
@@ -883,20 +785,11 @@ async function loop() {
 
 
 
-/*
-================================================
-PREDICT
-================================================
-*/
+/* =================================================
+   PREDICTION
+================================================= */
 
 async function predict() {
-
-
-    if (!model || !webcam) {
-
-        return;
-
-    }
 
 
     const predictions =
@@ -906,49 +799,49 @@ async function predict() {
 
 
     /*
-    Sắp xếp từ cao xuống thấp
+       Tìm class có xác suất cao nhất
     */
 
-    predictions.sort(
-        function(a, b) {
+    let best =
+        predictions[0];
 
-            return b.probability -
-                a.probability;
+
+    for (
+        let i = 1;
+        i < predictions.length;
+        i++
+    ) {
+
+
+        if (
+            predictions[i].probability >
+            best.probability
+        ) {
+
+            best =
+                predictions[i];
 
         }
-    );
 
-
-    /*
-    Kết quả cao nhất
-    */
-
-    const best =
-        predictions[0];
+    }
 
 
     const name =
         best.className;
 
 
-    const probability =
-        best.probability;
+    const confidence =
+        (
+            best.probability * 100
+        ).toFixed(1);
 
 
-    const percent =
-        (probability * 100)
-            .toFixed(1);
-
-
-
-    /*
-    Hiện kết quả
-    */
+    /* RESULT */
 
     document.getElementById(
         "result-name"
     ).innerText =
-        getPlantInfo(name).emoji +
+        getEmoji(name) +
         " " +
         name;
 
@@ -957,27 +850,20 @@ async function predict() {
         "confidence"
     ).innerText =
         "Độ chính xác: " +
-        percent +
+        confidence +
         "%";
 
 
+    /* PLANT INFO */
 
-    /*
-    Hiện thông tin
-    */
-
-    updatePlantInfo(
-        name,
-        probability
+    showPlantInfo(
+        name
     );
 
 
+    /* ALL PREDICTIONS */
 
-    /*
-    Hiện tất cả class
-    */
-
-    updatePredictions(
+    showPredictions(
         predictions
     );
 
@@ -985,159 +871,309 @@ async function predict() {
 
 
 
-/*
-================================================
-UPDATE PLANT INFO
-================================================
-*/
+/* =================================================
+   EMOJI
+================================================= */
 
-function updatePlantInfo(
-    name,
-    probability
-) {
+function getEmoji(name) {
 
 
-    const info =
-        getPlantInfo(name);
+    if (
+        name === "Nothing"
+    ) {
 
-
-    let html = "";
-
-
-    html +=
-        "<p>" +
-        info.description +
-        "</p>";
-
-
-    html +=
-        "<p><strong>🌿 Bộ phận:</strong> " +
-        info.parts +
-        "</p>";
-
-
-    /*
-    Nếu độ chính xác thấp
-    */
-
-    if (probability < 0.6) {
-
-
-        html +=
-            "<p style='color:#b45309;'>" +
-            "⚠️ Độ tin cậy chưa cao. " +
-            "Bạn nên đưa vật thể gần camera hơn " +
-            "và chụp trong điều kiện ánh sáng tốt." +
-            "</p>";
+        return "❌";
 
     }
 
 
-    document.getElementById(
-        "info-text"
-    ).innerHTML =
-        html;
+    if (
+        plantInfo[name]
+    ) {
+
+        return plantInfo[name].emoji;
+
+    }
+
+
+    return "🌿";
 
 }
 
 
 
-/*
-================================================
-UPDATE PREDICTIONS
-================================================
-*/
+/* =================================================
+   PLANT INFO
+================================================= */
 
-function updatePredictions(
+function showPlantInfo(name) {
+
+
+    const container =
+        document.getElementById(
+            "plant-info"
+        );
+
+
+    /* =============================================
+       NOTHING
+    ============================================= */
+
+    if (
+        name === "Nothing"
+    ) {
+
+
+        container.innerHTML = `
+
+            <div class="nothing-box">
+
+                <div class="icon">
+                    ❌
+                </div>
+
+                <h3>
+                    Chưa thấy loại cây nào
+                </h3>
+
+                <p>
+                    AI chưa phát hiện được
+                    dược liệu trong khung hình.
+                </p>
+
+                <p>
+                    Hãy đưa dược liệu rõ hơn
+                    và đủ ánh sáng trước camera.
+                </p>
+
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    /* =============================================
+       PLANT KHÔNG CÓ INFO
+    ============================================= */
+
+    const info =
+        plantInfo[name];
+
+
+    if (!info) {
+
+
+        container.innerHTML = `
+
+            <h3>
+                🌿 ${name}
+            </h3>
+
+            <p>
+                Chưa có thông tin cho loại
+                dược liệu này.
+            </p>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    /* =============================================
+       HIỂN THỊ INFO
+    ============================================= */
+
+    container.innerHTML = `
+
+        <h3>
+
+            ${info.emoji}
+
+            ${name}
+
+        </h3>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                🔬 Tên khoa học:
+            </span>
+
+            ${info.scientific}
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                🌿 Mô tả:
+            </span>
+
+            ${info.description}
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                🍃 Bộ phận sử dụng:
+            </span>
+
+            ${info.parts}
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                🌱 Đặc điểm:
+            </span>
+
+            ${info.characteristics}
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                📚 Thông tin sử dụng:
+            </span>
+
+            ${info.use}
+
+        </div>
+
+
+        <div class="warning">
+
+            ⚠️ ${info.note}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =================================================
+   PREDICTIONS
+================================================= */
+
+function showPredictions(
     predictions
 ) {
 
 
     const container =
         document.getElementById(
-            "prediction-list"
+            "predictions"
         );
 
 
     container.innerHTML = "";
 
 
-    predictions.forEach(
-        function(prediction) {
+    predictions
+        .sort(
+            function(a, b) {
 
-
-            const percent =
-                (
-                    prediction.probability *
-                    100
-                ).toFixed(1);
-
-
-            const item =
-                document.createElement(
-                    "div"
+                return (
+                    b.probability -
+                    a.probability
                 );
 
-
-            item.className =
-                "prediction-item";
-
-
-            item.innerHTML = `
-
-                <div class="prediction-header">
-
-                    <span>
-                        ${escapeHTML(
-                            prediction.className
-                        )}
-                    </span>
-
-                    <strong>
-                        ${percent}%
-                    </strong>
-
-                </div>
+            }
+        )
+        .forEach(
+            function(prediction) {
 
 
-                <div class="progress">
+                const percent =
+                    (
+                        prediction.probability *
+                        100
+                    ).toFixed(1);
 
-                    <div
-                        class="progress-bar"
-                        style="width:${percent}%">
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "prediction";
+
+
+                div.innerHTML = `
+
+                    <div class="prediction-header">
+
+                        <span>
+                            ${getEmoji(
+                                prediction.className
+                            )}
+
+                            ${prediction.className}
+
+                        </span>
+
+                        <strong>
+                            ${percent}%
+                        </strong>
+
                     </div>
 
-                </div>
 
-            `;
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="
+                                width:${percent}%
+                            "
+                        ></div>
+
+                    </div>
+
+                `;
 
 
-            container.appendChild(
-                item
-            );
+                container.appendChild(
+                    div
+                );
 
-        }
-    );
+            }
+        );
 
 }
 
 
 
-/*
-================================================
-STOP CAMERA
-================================================
-*/
+/* =================================================
+   STOP CAMERA
+================================================= */
 
 function stopCamera() {
 
 
-    isRunning = false;
+    running = false;
 
-
-    /*
-    Dừng animation
-    */
 
     if (animationId) {
 
@@ -1150,10 +1186,6 @@ function stopCamera() {
     }
 
 
-    /*
-    Dừng webcam
-    */
-
     if (webcam) {
 
         webcam.stop();
@@ -1163,17 +1195,13 @@ function stopCamera() {
     }
 
 
-    /*
-    Xóa camera
-    */
-
     document.getElementById(
         "webcam-container"
     ).innerHTML = `
 
         <div class="camera-placeholder">
 
-            <div class="icon">
+            <div class="camera-icon">
                 📷
             </div>
 
@@ -1185,10 +1213,6 @@ function stopCamera() {
 
     `;
 
-
-    /*
-    Button
-    */
 
     document.getElementById(
         "startButton"
@@ -1206,10 +1230,6 @@ function stopCamera() {
         "Camera đã dừng";
 
 
-    /*
-    Reset kết quả
-    */
-
     document.getElementById(
         "result-name"
     ).innerText =
@@ -1221,39 +1241,43 @@ function stopCamera() {
     ).innerText =
         "Độ chính xác: --%";
 
+
+    document.getElementById(
+        "plant-info"
+    ).innerHTML = `
+
+        <h3>
+            🌱 Plant Info
+        </h3>
+
+        <p>
+            Hãy bắt đầu camera để
+            AI nhận diện dược liệu.
+        </p>
+
+    `;
+
+
+    document.getElementById(
+        "predictions"
+    ).innerHTML = `
+
+        <p style="
+            text-align:center;
+            color:#777;
+        ">
+            Chưa có dữ liệu
+        </p>
+
+    `;
+
 }
 
 
 
-/*
-================================================
-ESCAPE HTML
-================================================
-*/
-
-function escapeHTML(text) {
-
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent = text;
-
-
-    return div.innerHTML;
-
-}
-
-
-
-/*
-================================================
-KHI ĐÓNG TRANG
-================================================
-*/
+/* =================================================
+   BEFORE UNLOAD
+================================================= */
 
 window.addEventListener(
     "beforeunload",
@@ -1272,5 +1296,4 @@ window.addEventListener(
 
 
 </body>
-
 </html>
