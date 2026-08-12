@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Nhận Diện Cây</title>
+    <title>🌿 AI Nhận Diện Cây</title>
+
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+
+    <!-- Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
+
 
     <style>
 
@@ -13,142 +20,278 @@
             box-sizing: border-box;
         }
 
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f1f8f3;
-            color: #26352a;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f8f4;
+            color: #183b2b;
         }
+
 
         /* HEADER */
 
         header {
-            background: #2e7d32;
+            background: linear-gradient(
+                135deg,
+                #075e36,
+                #0b7a48
+            );
+
             color: white;
-            padding: 25px 15px;
             text-align: center;
+            padding: 28px 20px;
         }
+
 
         header h1 {
             margin: 0;
             font-size: 32px;
         }
 
+
         header p {
-            margin: 10px 0 0;
-            font-size: 17px;
+            margin: 8px 0 0;
+            color: #d8f3e3;
         }
 
 
         /* MAIN */
 
-        main {
-            max-width: 1000px;
-            margin: auto;
-            padding: 25px 15px;
+        .container {
+            width: 92%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+
+        /* CARD */
+
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .title {
+            text-align: center;
+            margin-top: 0;
+            color: #075e36;
+        }
+
+
+        /* BUTTON */
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 13px 22px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        #startButton {
+            background: #087a47;
+            color: white;
+        }
+
+
+        #startButton:hover {
+            background: #056237;
+        }
+
+
+        #stopButton {
+            background: #ddd;
+            color: #555;
+        }
+
+
+        #stopButton:hover {
+            background: #ccc;
+        }
+
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
 
         /* CAMERA */
 
-        .camera-box {
-            background: white;
-            border-radius: 18px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        button {
-            background: #2e7d32;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 14px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        button:hover {
-            background: #1b5e20;
-        }
-
-        button:disabled {
-            background: #777;
-            cursor: not-allowed;
-        }
-
-
         #webcam-container {
+            width: 100%;
+            min-height: 300px;
+
+            background: #edf3ef;
+
+            border-radius: 18px;
+
             display: flex;
             justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
         }
 
+
         #webcam-container canvas {
-            width: 400px;
-            max-width: 100%;
-            border-radius: 15px;
-            border: 4px solid #2e7d32;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+
+            border-radius: 16px;
+        }
+
+
+        .camera-placeholder {
+            color: #718278;
+            text-align: center;
+            padding: 40px;
+        }
+
+
+        .camera-placeholder .icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+
+        /* STATUS */
+
+        #status {
+            text-align: center;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 12px;
+
+            background: #edf7f1;
+
+            color: #087a47;
+
+            font-weight: bold;
         }
 
 
         /* RESULT */
 
-        #result {
-            font-size: 30px;
+        .result-card {
+            text-align: center;
+        }
+
+
+        #result-name {
+            font-size: 36px;
             font-weight: bold;
+
+            color: #075e36;
+
+            margin: 10px 0;
+        }
+
+
+        #confidence {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            color: #087a47;
+        }
+
+
+        #result-info {
+            margin-top: 18px;
+
+            background: #f0f8f3;
+
+            padding: 18px;
+
+            border-radius: 15px;
+
+            text-align: left;
+
+            line-height: 1.6;
+        }
+
+
+        /* PROGRESS */
+
+        .prediction-list {
             margin-top: 20px;
         }
 
-        #confidence {
-            margin-top: 10px;
-            font-size: 18px;
+
+        .prediction-item {
+            margin-bottom: 13px;
         }
 
 
-        /* INFORMATION */
+        .prediction-header {
+            display: flex;
+            justify-content: space-between;
 
-        #info {
-            margin-top: 25px;
-        }
-
-        .info-card {
-            background: white;
-            border-radius: 18px;
-            padding: 25px;
-            text-align: left;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .info-card h2 {
-            color: #2e7d32;
-            margin-top: 0;
-        }
-
-        .info-card h3 {
-            color: #388e3c;
             margin-bottom: 5px;
+
+            font-size: 14px;
         }
 
-        .info-card p {
-            line-height: 1.7;
-            margin-top: 5px;
+
+        .progress {
+            height: 10px;
+
+            background: #e3ebe6;
+
+            border-radius: 20px;
+
+            overflow: hidden;
         }
 
-        .info-card ul {
-            line-height: 1.8;
+
+        .progress-bar {
+            height: 100%;
+
+            background: #0b8a50;
+
+            border-radius: 20px;
+
+            transition: width 0.2s;
         }
 
 
         /* FOOTER */
 
         footer {
-            margin-top: 30px;
-            padding: 20px;
-            background: #1b5e20;
-            color: white;
             text-align: center;
+
+            padding: 25px;
+
+            color: #6d7d73;
+
+            font-size: 13px;
         }
 
 
@@ -157,15 +300,15 @@
         @media (max-width: 600px) {
 
             header h1 {
-                font-size: 25px;
+                font-size: 26px;
             }
 
-            #result {
-                font-size: 24px;
+            .card {
+                padding: 18px;
             }
 
-            .camera-box {
-                padding: 15px;
+            #result-name {
+                font-size: 30px;
             }
 
         }
@@ -178,648 +321,954 @@
 <body>
 
 
-    <!-- ========================= -->
-    <!-- HEADER -->
-    <!-- ========================= -->
+<!-- ====================================== -->
+<!-- HEADER -->
+<!-- ====================================== -->
 
-    <header>
+<header>
 
-        <h1>🌱 AI Nhận Diện Cây</h1>
+    <h1>
+        🌿 AI Nhận Diện Cây
+    </h1>
 
-        <p>
-            Sử dụng trí tuệ nhân tạo để nhận diện cây
-        </p>
+    <p>
+        Sử dụng trí tuệ nhân tạo để nhận diện dược liệu
+    </p>
 
-    </header>
+</header>
 
 
-    <!-- ========================= -->
-    <!-- MAIN -->
-    <!-- ========================= -->
 
-    <main>
+<!-- ====================================== -->
+<!-- MAIN -->
+<!-- ====================================== -->
+
+<div class="container">
+
+
+    <!-- CAMERA -->
+
+    <div class="card">
+
+        <h2 class="title">
+            📷 Camera AI
+        </h2>
+
+
+        <div class="buttons">
+
+            <button
+                id="startButton"
+                onclick="startCamera()">
+
+                📷 Bắt đầu camera
+
+            </button>
+
+
+            <button
+                id="stopButton"
+                onclick="stopCamera()"
+                disabled>
+
+                ⏹ Dừng camera
+
+            </button>
+
+        </div>
+
 
 
         <!-- CAMERA -->
 
-        <section class="camera-box">
+        <div id="webcam-container">
 
-            <h2>📷 Camera AI</h2>
+            <div class="camera-placeholder">
 
-            <p>
-                Đưa lá, quả hoặc hình ảnh của cây
-                trước camera.
+                <div class="icon">
+                    📷
+                </div>
+
+                <div>
+                    Nhấn "Bắt đầu camera"
+                    để bắt đầu nhận diện
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div id="status">
+
+            Chưa khởi động camera
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================== -->
+    <!-- RESULT -->
+    <!-- ====================================== -->
+
+    <div class="card result-card">
+
+        <h2 class="title">
+            🤖 Kết quả nhận diện
+        </h2>
+
+
+        <div id="result-name">
+
+            Chưa nhận diện
+
+        </div>
+
+
+        <div id="confidence">
+
+            Độ chính xác: --%
+
+        </div>
+
+
+        <div id="result-info">
+
+            <strong>
+                🌱 Thông tin cây
+            </strong>
+
+            <p id="info-text">
+
+                Hãy đưa cây hoặc dược liệu
+                trước camera để AI nhận diện.
+
             </p>
 
-            <button id="startButton">
-                Bắt đầu camera
-            </button>
+        </div>
 
+    </div>
 
-            <div id="webcam-container"></div>
 
 
-            <div id="result">
-                Chưa nhận diện
-            </div>
+    <!-- ====================================== -->
+    <!-- ALL PREDICTIONS -->
+    <!-- ====================================== -->
 
+    <div class="card">
 
-            <div id="confidence">
-                Độ chính xác: --
-            </div>
+        <h2 class="title">
+            📊 Các kết quả dự đoán
+        </h2>
 
-        </section>
 
+        <div
+            id="prediction-list"
+            class="prediction-list">
 
+            <p style="text-align:center;color:#777;">
+                Chưa có dữ liệu.
+            </p>
 
-        <!-- ========================= -->
-        <!-- INFORMATION -->
-        <!-- ========================= -->
+        </div>
 
-        <section id="info">
+    </div>
 
-            <div class="info-card">
 
-                <h2>🌿 Thông tin cây</h2>
+</div>
 
-                <p>
-                    Hãy bật camera và đưa cây trước camera
-                    để AI nhận diện.
-                </p>
 
-            </div>
 
-        </section>
+<!-- ====================================== -->
+<!-- FOOTER -->
+<!-- ====================================== -->
 
+<footer>
 
-    </main>
+    🌿 AI Nhận Diện Cây
+    <br>
 
+    Powered by Teachable Machine
 
+</footer>
 
-    <!-- ========================= -->
-    <!-- FOOTER -->
-    <!-- ========================= -->
 
-    <footer>
 
-        <p>
-            🌱 AI Nhận Diện Cây
-        </p>
+<!-- ====================================== -->
+<!-- JAVASCRIPT -->
+<!-- ====================================== -->
 
-        <p>
-            Powered by Teachable Machine
-        </p>
+<script>
 
-    </footer>
 
+/*
+================================================
+MODEL TEACHABLE MACHINE
+================================================
+*/
 
+const MODEL_URL =
+    "https://teachablemachine.withgoogle.com/models/jqsvfVlzv/";
 
-    <!-- ========================= -->
-    <!-- TENSORFLOW -->
-    <!-- ========================= -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+let model = null;
 
+let webcam = null;
 
-    <!-- ========================= -->
-    <!-- TEACHABLE MACHINE -->
-    <!-- ========================= -->
+let isRunning = false;
 
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+let animationId = null;
 
 
 
-    <script>
+/*
+================================================
+THÔNG TIN CÂY
+================================================
 
+Nếu tên class trong Teachable Machine
+trùng với các tên bên dưới thì web
+sẽ hiện thông tin tương ứng.
 
-        // =====================================
-        // MODEL CỦA BẠN
-        // =====================================
+Bạn có thể thêm cây mới vào đây.
+================================================
+*/
 
-        const URL =
-            "https://teachablemachine.withgoogle.com/models/ZNbe19OuD/";
+const plantInfo = {
 
 
-        let model;
+    "Quế": {
 
-        let webcam;
+        emoji: "🌿",
 
-        let running = false;
+        description:
+            "Quế là nhóm cây thuộc chi Cinnamomum, thường có mùi thơm đặc trưng. Vỏ quế được sử dụng phổ biến trong ẩm thực.",
 
+        parts:
+            "Vỏ cây thường là bộ phận được sử dụng.",
 
+    },
 
-        // =====================================
-        // NÚT BẮT ĐẦU
-        // =====================================
 
-        document
-            .getElementById("startButton")
-            .addEventListener("click", start);
+    "Táo đỏ": {
 
+        emoji: "🍎",
 
+        description:
+            "Táo đỏ thường được dùng để chỉ quả táo tàu (Ziziphus jujuba). Quả có thể được sử dụng tươi hoặc sấy khô.",
 
-        // =====================================
-        // START CAMERA
-        // =====================================
+        parts:
+            "Quả là bộ phận thường được sử dụng.",
 
-        async function start() {
+    },
 
 
-            if (running) {
+    "Gừng": {
 
-                return;
+        emoji: "🫚",
 
-            }
+        description:
+            "Gừng là cây thân thảo có thân rễ phát triển dưới mặt đất và có mùi thơm, vị cay đặc trưng.",
 
+        parts:
+            "Thân rễ thường được sử dụng.",
 
-            const button =
-                document.getElementById("startButton");
+    },
 
 
-            button.innerText =
-                "⏳ Đang tải AI...";
+    "Nghệ": {
 
+        emoji: "🌱",
 
-            button.disabled = true;
+        description:
+            "Nghệ là cây thân thảo thuộc họ Gừng, có thân rễ màu vàng cam đặc trưng.",
 
+        parts:
+            "Thân rễ thường được sử dụng.",
 
+    },
 
-            try {
 
+    "Lá trầu không": {
 
-                // Load model
+        emoji: "🍃",
 
-                model =
-                    await tmImage.load(
+        description:
+            "Lá trầu không là lá của cây trầu không, có hình dạng đặc trưng và mùi thơm.",
 
-                        URL + "model.json",
+        parts:
+            "Lá là bộ phận thường được sử dụng.",
 
-                        URL + "metadata.json"
+    },
 
-                    );
 
+    "Không xác định": {
 
+        emoji: "❓",
 
-                // Create webcam
+        description:
+            "AI chưa xác định được loại cây.",
 
-                webcam =
-                    new tmImage.Webcam(
+        parts:
+            "Hãy thử đưa vật thể gần camera hơn và đảm bảo ánh sáng đủ.",
 
-                        400,
+    }
 
-                        400,
+};
 
-                        true
 
-                    );
 
+/*
+================================================
+TÌM THÔNG TIN CÂY
+================================================
+*/
 
+function getPlantInfo(className) {
 
-                await webcam.setup();
 
+    /*
+    Tìm chính xác
+    */
 
-                await webcam.play();
+    if (plantInfo[className]) {
 
+        return plantInfo[className];
 
+    }
 
-                // Add camera
 
-                document
-                    .getElementById(
-                        "webcam-container"
-                    )
-                    .appendChild(
-                        webcam.canvas
-                    );
+    /*
+    Tìm không phân biệt hoa thường
+    */
 
+    const normalized =
+        className
+            .trim()
+            .toLowerCase();
 
 
-                running = true;
+    for (const key in plantInfo) {
 
+        if (
+            key.toLowerCase() === normalized
+        ) {
 
-                button.innerText =
-                    "📷 Camera đang chạy";
-
-
-                loop();
-
-
-            }
-
-            catch (error) {
-
-
-                console.error(error);
-
-
-                button.disabled = false;
-
-
-                button.innerText =
-                    "Bắt đầu camera";
-
-
-                document
-                    .getElementById("result")
-                    .innerText =
-                    "❌ Không thể mở camera";
-
-
-                document
-                    .getElementById("confidence")
-                    .innerText =
-                    "Hãy kiểm tra quyền sử dụng camera.";
-
-            }
+            return plantInfo[key];
 
         }
 
+    }
 
 
-        // =====================================
-        // LOOP
-        // =====================================
+    /*
+    Nếu class mới chưa có thông tin
+    */
 
-        async function loop() {
+    return {
+
+        emoji: "🌿",
+
+        description:
+            "AI đã nhận diện được lớp này từ model Teachable Machine.",
+
+        parts:
+            "Bạn có thể thêm thông tin chi tiết cho loại cây này vào biến plantInfo trong code."
+
+    };
+
+}
 
 
-            if (!running) {
 
-                return;
+/*
+================================================
+LOAD MODEL
+================================================
+*/
 
-            }
-
-
-            webcam.update();
-
-
-            await predict();
+async function loadModel() {
 
 
-            requestAnimationFrame(loop);
+    if (model) {
+
+        return;
+
+    }
+
+
+    document.getElementById("status").innerText =
+        "⏳ Đang tải model AI...";
+
+
+    const modelURL =
+        MODEL_URL + "model.json";
+
+
+    const metadataURL =
+        MODEL_URL + "metadata.json";
+
+
+    model =
+        await tmImage.load(
+            modelURL,
+            metadataURL
+        );
+
+
+    document.getElementById("status").innerText =
+        "✓ Model AI đã sẵn sàng";
+
+}
+
+
+
+/*
+================================================
+START CAMERA
+================================================
+*/
+
+async function startCamera() {
+
+
+    if (isRunning) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        /*
+        Tải model
+        */
+
+        await loadModel();
+
+
+
+        /*
+        Xóa camera cũ
+        */
+
+        const container =
+            document.getElementById(
+                "webcam-container"
+            );
+
+
+        container.innerHTML = "";
+
+
+
+        /*
+        Tạo webcam
+
+        400 = chiều rộng
+        400 = chiều cao
+        true = lật camera
+        */
+
+        webcam =
+            new tmImage.Webcam(
+                400,
+                400,
+                true
+            );
+
+
+        await webcam.setup();
+
+
+        await webcam.play();
+
+
+
+        container.appendChild(
+            webcam.canvas
+        );
+
+
+        isRunning = true;
+
+
+        /*
+        Đổi trạng thái button
+        */
+
+        document.getElementById(
+            "startButton"
+        ).disabled = true;
+
+
+        document.getElementById(
+            "stopButton"
+        ).disabled = false;
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "🟢 Camera đang hoạt động";
+
+
+        /*
+        Bắt đầu vòng lặp
+        */
+
+        animationId =
+            window.requestAnimationFrame(
+                loop
+            );
+
+
+    } catch (error) {
+
+
+        console.error(error);
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "❌ Không thể mở camera";
+
+
+        alert(
+            "Không thể mở camera. Hãy kiểm tra quyền sử dụng camera của Chrome."
+        );
+
+    }
+
+}
+
+
+
+/*
+================================================
+LOOP
+================================================
+*/
+
+async function loop() {
+
+
+    if (!isRunning) {
+
+        return;
+
+    }
+
+
+    webcam.update();
+
+
+    await predict();
+
+
+    animationId =
+        window.requestAnimationFrame(
+            loop
+        );
+
+}
+
+
+
+/*
+================================================
+PREDICT
+================================================
+*/
+
+async function predict() {
+
+
+    if (!model || !webcam) {
+
+        return;
+
+    }
+
+
+    const predictions =
+        await model.predict(
+            webcam.canvas
+        );
+
+
+    /*
+    Sắp xếp từ cao xuống thấp
+    */
+
+    predictions.sort(
+        function(a, b) {
+
+            return b.probability -
+                a.probability;
 
         }
+    );
+
+
+    /*
+    Kết quả cao nhất
+    */
+
+    const best =
+        predictions[0];
+
+
+    const name =
+        best.className;
+
+
+    const probability =
+        best.probability;
+
+
+    const percent =
+        (probability * 100)
+            .toFixed(1);
 
 
 
-        // =====================================
-        // PREDICT
-        // =====================================
+    /*
+    Hiện kết quả
+    */
 
-        async function predict() {
+    document.getElementById(
+        "result-name"
+    ).innerText =
+        getPlantInfo(name).emoji +
+        " " +
+        name;
 
 
-            const prediction =
-                await model.predict(
-                    webcam.canvas
+    document.getElementById(
+        "confidence"
+    ).innerText =
+        "Độ chính xác: " +
+        percent +
+        "%";
+
+
+
+    /*
+    Hiện thông tin
+    */
+
+    updatePlantInfo(
+        name,
+        probability
+    );
+
+
+
+    /*
+    Hiện tất cả class
+    */
+
+    updatePredictions(
+        predictions
+    );
+
+}
+
+
+
+/*
+================================================
+UPDATE PLANT INFO
+================================================
+*/
+
+function updatePlantInfo(
+    name,
+    probability
+) {
+
+
+    const info =
+        getPlantInfo(name);
+
+
+    let html = "";
+
+
+    html +=
+        "<p>" +
+        info.description +
+        "</p>";
+
+
+    html +=
+        "<p><strong>🌿 Bộ phận:</strong> " +
+        info.parts +
+        "</p>";
+
+
+    /*
+    Nếu độ chính xác thấp
+    */
+
+    if (probability < 0.6) {
+
+
+        html +=
+            "<p style='color:#b45309;'>" +
+            "⚠️ Độ tin cậy chưa cao. " +
+            "Bạn nên đưa vật thể gần camera hơn " +
+            "và chụp trong điều kiện ánh sáng tốt." +
+            "</p>";
+
+    }
+
+
+    document.getElementById(
+        "info-text"
+    ).innerHTML =
+        html;
+
+}
+
+
+
+/*
+================================================
+UPDATE PREDICTIONS
+================================================
+*/
+
+function updatePredictions(
+    predictions
+) {
+
+
+    const container =
+        document.getElementById(
+            "prediction-list"
+        );
+
+
+    container.innerHTML = "";
+
+
+    predictions.forEach(
+        function(prediction) {
+
+
+            const percent =
+                (
+                    prediction.probability *
+                    100
+                ).toFixed(1);
+
+
+            const item =
+                document.createElement(
+                    "div"
                 );
 
 
-
-            // Tìm class tốt nhất
-
-            let best =
-                prediction[0];
+            item.className =
+                "prediction-item";
 
 
+            item.innerHTML = `
 
-            for (
-                let i = 1;
-                i < prediction.length;
-                i++
-            ) {
+                <div class="prediction-header">
 
+                    <span>
+                        ${escapeHTML(
+                            prediction.className
+                        )}
+                    </span>
 
-                if (
-                    prediction[i].probability >
-                    best.probability
-                ) {
+                    <strong>
+                        ${percent}%
+                    </strong>
 
-                    best =
-                        prediction[i];
-
-                }
-
-            }
+                </div>
 
 
+                <div class="progress">
 
-            const name =
-                best.className;
+                    <div
+                        class="progress-bar"
+                        style="width:${percent}%">
+                    </div>
 
+                </div>
 
-            const confidence =
-                best.probability * 100;
-
-
-
-            // =================================
-            // HIỆN KẾT QUẢ
-            // =================================
-
-            document
-                .getElementById("result")
-                .innerText =
-                "🔎 " + name;
+            `;
 
 
-
-            document
-                .getElementById("confidence")
-                .innerText =
-                "Độ chính xác: " +
-                confidence.toFixed(1) +
-                "%";
-
-
-
-            // =================================
-            // HIỆN THÔNG TIN
-            // =================================
-
-            showInformation(
-                name,
-                confidence
+            container.appendChild(
+                item
             );
 
         }
+    );
 
+}
 
 
-        // =====================================
-        // THÔNG TIN CÂY
-        // =====================================
 
-        function showInformation(
-            name,
-            confidence
-        ) {
+/*
+================================================
+STOP CAMERA
+================================================
+*/
 
+function stopCamera() {
 
-            const info =
-                document.getElementById("info");
 
+    isRunning = false;
 
 
-            // =================================
-            // CÂY QUẾ
-            // =================================
+    /*
+    Dừng animation
+    */
 
-            if (
-                name.toLowerCase() === "que"
-            ) {
+    if (animationId) {
 
+        cancelAnimationFrame(
+            animationId
+        );
 
-                info.innerHTML = `
+        animationId = null;
 
-                    <div class="info-card">
+    }
 
-                        <h2>🌿 Cây Quế</h2>
 
+    /*
+    Dừng webcam
+    */
 
-                        <h3>📌 Tên gọi</h3>
+    if (webcam) {
 
-                        <p>
-                            Quế là một nhóm cây thuộc chi
-                            <i>Cinnamomum</i>.
-                            Vỏ cây thường có mùi thơm đặc trưng
-                            và được sử dụng làm gia vị.
-                        </p>
+        webcam.stop();
 
+        webcam = null;
 
-                        <h3>🌳 Đặc điểm</h3>
+    }
 
-                        <ul>
 
-                            <li>
-                                Là cây thân gỗ.
-                            </li>
+    /*
+    Xóa camera
+    */
 
-                            <li>
-                                Lá thường có màu xanh
-                                và có mùi thơm đặc trưng
-                                khi vò.
-                            </li>
+    document.getElementById(
+        "webcam-container"
+    ).innerHTML = `
 
-                            <li>
-                                Vỏ thân chứa tinh dầu
-                                tạo nên mùi thơm đặc biệt.
-                            </li>
+        <div class="camera-placeholder">
 
-                            <li>
-                                Cây có thể phát triển
-                                thành cây lâu năm.
-                            </li>
+            <div class="icon">
+                📷
+            </div>
 
-                        </ul>
+            <div>
+                Camera đã dừng
+            </div>
 
+        </div>
 
-                        <h3>🌱 Môi trường sống</h3>
+    `;
 
-                        <p>
-                            Quế thường phát triển tốt
-                            ở những khu vực có khí hậu
-                            nhiệt đới hoặc cận nhiệt đới,
-                            đất có khả năng thoát nước tốt.
-                        </p>
 
+    /*
+    Button
+    */
 
-                        <h3>🍂 Bộ phận được sử dụng</h3>
+    document.getElementById(
+        "startButton"
+    ).disabled = false;
 
-                        <ul>
 
-                            <li>Vỏ cây</li>
+    document.getElementById(
+        "stopButton"
+    ).disabled = true;
 
-                            <li>Lá</li>
 
-                            <li>Cành</li>
+    document.getElementById(
+        "status"
+    ).innerText =
+        "Camera đã dừng";
 
-                                </ul>
 
+    /*
+    Reset kết quả
+    */
 
-                        <h3>🍵 Công dụng</h3>
+    document.getElementById(
+        "result-name"
+    ).innerText =
+        "Chưa nhận diện";
 
-                        <p>
-                            Vỏ quế được sử dụng phổ biến
-                            làm gia vị và tạo hương thơm
-                            trong nhiều món ăn, đồ uống
-                            và sản phẩm thực phẩm.
-                        </p>
 
+    document.getElementById(
+        "confidence"
+    ).innerText =
+        "Độ chính xác: --%";
 
-                        <h3>⚠️ Lưu ý</h3>
+}
 
-                        <p>
-                            Thông tin trên mang tính giáo dục.
-                            Việc sử dụng quế với mục đích
-                            sức khỏe nên được thực hiện
-                            phù hợp và không thay thế
-                            tư vấn chuyên môn.
-                        </p>
 
-                    </div>
 
-                `;
+/*
+================================================
+ESCAPE HTML
+================================================
+*/
 
-            }
+function escapeHTML(text) {
 
 
+    const div =
+        document.createElement(
+            "div"
+        );
 
-            // =================================
-            // TÁO ĐỎ
-            // =================================
 
-            else if (
-                name.toLowerCase() === "tao do"
-            ) {
+    div.textContent = text;
 
 
-                info.innerHTML = `
+    return div.innerHTML;
 
-                    <div class="info-card">
+}
 
-                        <h2>🍎 Cây Táo Đỏ</h2>
 
 
-                        <h3>📌 Tên gọi</h3>
+/*
+================================================
+KHI ĐÓNG TRANG
+================================================
+*/
 
-                        <p>
-                            Táo đỏ thường được dùng để
-                            chỉ quả của cây táo tàu,
-                            có tên khoa học là
-                            <i>Ziziphus jujuba</i>.
-                        </p>
+window.addEventListener(
+    "beforeunload",
+    function() {
 
+        if (webcam) {
 
-                        <h3>🌳 Đặc điểm</h3>
-
-                        <ul>
-
-                            <li>
-                                Là cây thân gỗ nhỏ
-                                hoặc cây bụi lớn.
-                            </li>
-
-                            <li>
-                                Cành thường có gai
-                                ở một số giống.
-                            </li>
-
-                            <li>
-                                Lá có màu xanh và
-                                hình dạng đặc trưng.
-                            </li>
-
-                            <li>
-                                Quả khi chín thường chuyển
-                                từ màu xanh sang màu đỏ
-                                hoặc nâu đỏ.
-                            </li>
-
-                        </ul>
-
-
-                        <h3>🍎 Đặc điểm quả</h3>
-
-                        <p>
-                            Quả táo đỏ có kích thước
-                            tương đối nhỏ. Khi chín,
-                            quả có màu đỏ nâu và vị
-                            ngọt. Quả có thể được ăn
-                            tươi hoặc sấy khô.
-                        </p>
-
-
-                        <h3>🌱 Môi trường sống</h3>
-
-                        <p>
-                            Cây táo tàu có khả năng thích nghi
-                            với nhiều điều kiện khí hậu
-                            và được trồng ở nhiều khu vực
-                            trên thế giới.
-                        </p>
-
-
-                        <h3>🍽️ Công dụng</h3>
-
-                        <ul>
-
-                            <li>
-                                Có thể dùng làm thực phẩm.
-                            </li>
-
-                            <li>
-                                Quả tươi có thể ăn trực tiếp.
-                            </li>
-
-                            <li>
-                                Quả khô được sử dụng trong
-                                một số món ăn và đồ uống.
-                            </li>
-
-                        </ul>
-
-
-                        <h3>🌿 Giá trị dinh dưỡng</h3>
-
-                        <p>
-                            Táo tàu chứa carbohydrate,
-                            chất xơ và một số vitamin
-                            cùng khoáng chất. Thành phần
-                            dinh dưỡng thay đổi tùy theo
-                            giống và cách chế biến.
-                        </p>
-
-
-                        <h3>⚠️ Lưu ý</h3>
-
-                        <p>
-                            Thông tin trên nhằm mục đích
-                            giáo dục về thực vật và thực phẩm.
-                            Không nên xem đây là lời khuyên
-                            y tế.
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
-
-
-
-            // =================================
-            // KHÔNG NHẬN DIỆN
-            // =================================
-
-            else {
-
-
-                info.innerHTML = `
-
-                    <div class="info-card">
-
-                        <h2>🌱 Chưa xác định</h2>
-
-                        <p>
-                            AI chưa nhận diện được cây.
-                        </p>
-
-                        <p>
-                            Hãy đưa cây vào giữa camera
-                            và đảm bảo hình ảnh đủ sáng.
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
+            webcam.stop();
 
         }
 
+    }
+);
 
-    </script>
+</script>
 
 
 </body>
