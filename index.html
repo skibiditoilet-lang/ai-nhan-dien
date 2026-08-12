@@ -1,6 +1,65 @@
-<h1>AI Nhận Diện</h1>
+<!DOCTYPE html>
+<html lang="vi">
 
-    <button onclick="start()">Bắt đầu camera</button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Nhận Diện</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #webcam-container {
+            margin-top: 25px;
+        }
+
+        #webcam-container canvas {
+            width: 400px;
+            max-width: 90vw;
+            border-radius: 12px;
+        }
+
+        #result {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #info {
+            font-size: 22px;
+            margin-top: 15px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <h1>🤖 AI Nhận Diện</h1>
+
+    <button id="startButton">
+        Bắt đầu camera
+    </button>
 
     <div id="webcam-container"></div>
 
@@ -13,8 +72,169 @@
     </div>
 
 
-    <!-- TensorFlow -->
+    <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
     <!-- Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+
+    <script>
+
+        const URL =
+            "https://teachablemachine.withgoogle.com/models/ZNbe19OuD/";
+
+        let model;
+        let webcam;
+        let running = false;
+
+
+        document
+            .getElementById("startButton")
+            .addEventListener("click", start);
+
+
+        async function start() {
+
+            if (running) return;
+
+            document.getElementById("startButton").innerText =
+                "Đang tải AI...";
+
+
+            try {
+
+                model = await tmImage.load(
+                    URL + "model.json",
+                    URL + "metadata.json"
+                );
+
+
+                webcam = new tmImage.Webcam(
+                    400,
+                    400,
+                    true
+                );
+
+
+                await webcam.setup();
+
+                await webcam.play();
+
+
+                document
+                    .getElementById("webcam-container")
+                    .appendChild(webcam.canvas);
+
+
+                running = true;
+
+
+                document.getElementById("startButton").innerText =
+                    "Camera đang chạy";
+
+
+                loop();
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                document.getElementById("startButton").innerText =
+                    "Bắt đầu camera";
+
+                document.getElementById("result").innerText =
+                    "Không thể mở camera";
+
+                document.getElementById("info").innerText =
+                    "Hãy cho phép Chrome sử dụng camera.";
+
+            }
+
+        }
+
+
+        async function loop() {
+
+            if (!running) return;
+
+            webcam.update();
+
+            await predict();
+
+            requestAnimationFrame(loop);
+
+        }
+
+
+        async function predict() {
+
+            const prediction =
+                await model.predict(webcam.canvas);
+
+
+            let best = prediction[0];
+
+
+            for (
+                let i = 1;
+                i < prediction.length;
+                i++
+            ) {
+
+                if (
+                    prediction[i].probability >
+                    best.probability
+                ) {
+
+                    best = prediction[i];
+
+                }
+
+            }
+
+
+            const name =
+                best.className;
+
+
+            const confidence =
+                (best.probability * 100).toFixed(1);
+
+
+            document.getElementById("result").innerText =
+                name + " - " + confidence + "%";
+
+
+            if (name === "que") {
+
+                document.getElementById("info").innerHTML =
+                    "🪵 Đây là <b>QUE</b>";
+
+            }
+
+
+            else if (name === "tao do") {
+
+                document.getElementById("info").innerHTML =
+                    "🍎 Đây là <b>TÁO ĐỎ</b>";
+
+            }
+
+
+            else {
+
+                document.getElementById("info").innerText =
+                    "Không xác định";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
