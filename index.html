@@ -73,23 +73,23 @@
         button {
             border: none;
             border-radius: 12px;
-            padding: 13px 22px;
+            padding: 14px 22px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
-        #startButton {
+        #photoButton {
             background: #087a47;
             color: white;
         }
 
-        #startButton:hover {
+        #photoButton:hover {
             background: #056237;
         }
 
-        #stopButton {
+        #clearButton {
             background: #dddddd;
             color: #444;
         }
@@ -99,42 +99,48 @@
             cursor: not-allowed;
         }
 
-        /* CAMERA */
+        /*
+        ==========================================
+        KHU VỰC ẢNH
+        ==========================================
+        */
 
-        #webcam-container {
+        #photo-container {
             width: 100%;
             min-height: 300px;
             background: #edf3ef;
             border-radius: 18px;
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             overflow: hidden;
             position: relative;
         }
 
-        #webcam-video {
-            display: block;
+        #preview-image {
+            display: none;
+
             width: 100%;
             max-width: 600px;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
-            border-radius: 16px;
-            background: black;
 
-            /* QUAN TRỌNG CHO IPHONE */
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
+            max-height: 550px;
+
+            object-fit: contain;
+
+            border-radius: 16px;
+            background: #000;
         }
 
-        .camera-placeholder {
+        .photo-placeholder {
             text-align: center;
             color: #718278;
             padding: 40px;
         }
 
-        .camera-icon {
-            font-size: 60px;
+        .photo-icon {
+            font-size: 65px;
         }
 
         #status {
@@ -146,6 +152,12 @@
             color: #087a47;
             font-weight: bold;
         }
+
+        /*
+        ==========================================
+        RESULT
+        ==========================================
+        */
 
         #result-name {
             text-align: center;
@@ -161,6 +173,12 @@
             font-weight: bold;
             color: #087a47;
         }
+
+        /*
+        ==========================================
+        PLANT INFO
+        ==========================================
+        */
 
         #plant-info {
             margin-top: 25px;
@@ -198,6 +216,12 @@
             font-size: 60px;
         }
 
+        /*
+        ==========================================
+        MACHINE LEARNING
+        ==========================================
+        */
+
         .prediction {
             margin-bottom: 18px;
         }
@@ -222,6 +246,31 @@
             transition: width 0.2s;
         }
 
+        /*
+        ==========================================
+        HELP
+        ==========================================
+        */
+
+        .camera-help {
+            margin-top: 15px;
+            padding: 12px;
+
+            background: #f5f7f6;
+            border-radius: 12px;
+
+            font-size: 13px;
+            line-height: 1.6;
+
+            color: #65736b;
+        }
+
+        /*
+        ==========================================
+        FOOTER
+        ==========================================
+        */
+
         footer {
             text-align: center;
             padding: 25px;
@@ -229,15 +278,11 @@
             font-size: 13px;
         }
 
-        .camera-help {
-            margin-top: 15px;
-            padding: 12px;
-            background: #f5f7f6;
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #65736b;
-        }
+        /*
+        ==========================================
+        MOBILE
+        ==========================================
+        */
 
         @media (max-width: 600px) {
 
@@ -257,24 +302,23 @@
                 font-size: 30px;
             }
 
-            #webcam-container {
+            #photo-container {
                 min-height: 250px;
-            }
-
-            #webcam-video {
-                width: 100%;
-                border-radius: 14px;
             }
 
             button {
                 width: 100%;
             }
+
         }
+
     </style>
+
 </head>
 
 
 <body>
+
 
 <header>
 
@@ -289,79 +333,119 @@
 </header>
 
 
+
 <div class="container">
 
-    <!-- CAMERA -->
+
+    <!-- ==========================================
+         CHỤP ẢNH
+    =========================================== -->
 
     <div class="card">
 
         <h2 class="title">
-            📷 Camera AI
+            📸 Chụp ảnh dược liệu
         </h2>
+
 
         <div class="buttons">
 
-            <button
-                id="startButton"
-                onclick="startCamera()">
+            <!--
+            Input này sẽ mở camera trên điện thoại.
 
-                📷 Bắt đầu camera
+            capture="environment"
+            = ưu tiên camera sau.
+            -->
+
+            <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                capture="environment"
+                style="display:none;"
+            >
+
+
+            <button
+                id="photoButton"
+                onclick="openCamera()">
+
+                📸 Chụp ảnh
 
             </button>
 
 
             <button
-                id="stopButton"
-                onclick="stopCamera()"
-                disabled>
+                id="clearButton"
+                onclick="clearPhoto()">
 
-                ⏹ Dừng camera
+                🗑 Xóa ảnh
 
             </button>
 
         </div>
 
 
-        <div id="webcam-container">
+        <!-- KHU VỰC HIỂN THỊ ẢNH -->
 
-            <div class="camera-placeholder">
+        <div id="photo-container">
 
-                <div class="camera-icon">
+            <div
+                id="photo-placeholder"
+                class="photo-placeholder">
+
+                <div class="photo-icon">
                     📷
                 </div>
 
                 <p>
-                    Nhấn "Bắt đầu camera"
-                    để nhận diện dược liệu
+                    Nhấn "Chụp ảnh"
+                    để chụp dược liệu
                 </p>
 
             </div>
+
+
+            <img
+                id="preview-image"
+                alt="Ảnh dược liệu">
 
         </div>
 
 
         <div id="status">
-            Chưa khởi động camera
+            Chưa chụp ảnh
         </div>
 
 
         <div class="camera-help">
 
-            📱 <b>Nếu dùng iPhone:</b>
+            📱 <b>Trên điện thoại:</b>
+
+            <br><br>
+
+            Nhấn <b>Chụp ảnh</b> → camera điện thoại
+            sẽ mở → chụp dược liệu → ảnh sẽ được
+            đưa vào AI để nhận diện.
+
+            <br><br>
+
+            💻 <b>Trên máy tính:</b>
 
             <br>
 
-            Hãy mở website bằng Safari/Chrome
-            qua địa chỉ <b>HTTPS</b> và chọn
-            <b>Cho phép</b> khi trình duyệt hỏi
-            quyền sử dụng camera.
+            Bạn có thể chọn ảnh từ máy tính hoặc
+            webcam tùy trình duyệt.
 
         </div>
 
     </div>
 
 
-    <!-- RESULT -->
+
+    <!-- ==========================================
+         KẾT QUẢ
+    =========================================== -->
 
     <div class="card">
 
@@ -380,6 +464,8 @@
         </div>
 
 
+        <!-- THÔNG TIN DƯỢC LIỆU -->
+
         <div id="plant-info">
 
             <h3>
@@ -387,7 +473,7 @@
             </h3>
 
             <p>
-                Hãy đưa dược liệu trước camera
+                Hãy chụp ảnh dược liệu
                 để AI nhận diện.
             </p>
 
@@ -396,7 +482,10 @@
     </div>
 
 
-    <!-- MACHINE LEARNING -->
+
+    <!-- ==========================================
+         MACHINE LEARNING
+    =========================================== -->
 
     <div class="card">
 
@@ -407,15 +496,23 @@
 
         <div id="predictions">
 
-            <p style="text-align:center;color:#777;">
+            <p
+                style="
+                    text-align:center;
+                    color:#777;
+                ">
+
                 Chưa có dữ liệu
+
             </p>
 
         </div>
 
     </div>
 
+
 </div>
+
 
 
 <footer>
@@ -432,9 +529,11 @@
 
 <script>
 
-/* =====================================================
-   MODEL
-===================================================== */
+/*
+=====================================================
+MODEL TEACHABLE MACHINE
+=====================================================
+*/
 
 const MODEL_URL =
     "https://teachablemachine.withgoogle.com/models/NyfzcXyn2/";
@@ -442,18 +541,12 @@ const MODEL_URL =
 
 let model = null;
 
-let stream = null;
 
-let video = null;
-
-let running = false;
-
-let animationId = null;
-
-
-/* =====================================================
-   LOAD MODEL
-===================================================== */
+/*
+=====================================================
+LOAD MODEL
+=====================================================
+*/
 
 async function loadModel() {
 
@@ -472,6 +565,7 @@ async function loadModel() {
 
         const modelURL =
             MODEL_URL + "model.json";
+
 
         const metadataURL =
             MODEL_URL + "metadata.json";
@@ -499,6 +593,7 @@ async function loadModel() {
 
     }
 
+
     catch (error) {
 
         console.error(
@@ -518,13 +613,64 @@ async function loadModel() {
 }
 
 
-/* =====================================================
-   START CAMERA
-===================================================== */
+/*
+=====================================================
+MỞ CAMERA / CHỌN ẢNH
+=====================================================
+*/
 
-async function startCamera() {
+function openCamera() {
 
-    if (running) {
+    const input =
+        document.getElementById(
+            "photoInput"
+        );
+
+
+    input.click();
+
+}
+
+
+/*
+=====================================================
+KHI NGƯỜI DÙNG CHỤP ẢNH
+=====================================================
+*/
+
+document
+    .getElementById("photoInput")
+    .addEventListener(
+        "change",
+        handlePhoto
+    );
+
+
+
+async function handlePhoto(event) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    /*
+    Kiểm tra file có phải ảnh không
+    */
+
+    if (
+        !file.type.startsWith("image/")
+    ) {
+
+        alert(
+            "Vui lòng chọn một file ảnh."
+        );
 
         return;
 
@@ -533,353 +679,180 @@ async function startCamera() {
 
     try {
 
-        /* ---------------------------------------------
-           KIỂM TRA CAMERA API
-        --------------------------------------------- */
+        /*
+        =============================================
+        HIỂN THỊ ẢNH
+        =============================================
+        */
 
-        if (
-            !navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia
-        ) {
-
-            throw new Error(
-                "Trình duyệt không hỗ trợ camera."
-            );
-
-        }
-
-
-        /* ---------------------------------------------
-           HTTPS CHECK
-        --------------------------------------------- */
-
-        const isLocalhost =
-            location.hostname === "localhost" ||
-            location.hostname === "127.0.0.1";
-
-
-        if (
-            location.protocol !== "https:" &&
-            !isLocalhost
-        ) {
-
-            document.getElementById("status").innerText =
-                "❌ Camera cần HTTPS";
-
-
-            alert(
-                "Camera trên điện thoại cần website chạy bằng HTTPS. Hãy mở bằng GitHub Pages."
+        const image =
+            document.getElementById(
+                "preview-image"
             );
 
 
-            return;
+        const placeholder =
+            document.getElementById(
+                "photo-placeholder"
+            );
 
-        }
+
+        const imageURL =
+            URL.createObjectURL(file);
 
 
-        /* ---------------------------------------------
-           LOAD AI
-        --------------------------------------------- */
+        image.src =
+            imageURL;
+
+
+        image.style.display =
+            "block";
+
+
+        placeholder.style.display =
+            "none";
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "⏳ Đang phân tích ảnh...";
+
+
+        /*
+        =============================================
+        TẢI MODEL
+        =============================================
+        */
 
         await loadModel();
 
 
-        /* ---------------------------------------------
-           XÓA CAMERA CŨ
-        --------------------------------------------- */
+        /*
+        =============================================
+        ĐỢI ẢNH LOAD HOÀN TOÀN
+        =============================================
+        */
 
-        const container =
-            document.getElementById(
-                "webcam-container"
-            );
-
-
-        container.innerHTML = "";
+        await waitForImage(image);
 
 
-        /* ---------------------------------------------
-           TẠO VIDEO
-        --------------------------------------------- */
+        /*
+        =============================================
+        NHẬN DIỆN
+        =============================================
+        */
 
-        video =
-            document.createElement("video");
-
-
-        video.id =
-            "webcam-video";
-
-
-        video.autoplay =
-            true;
-
-
-        video.muted =
-            true;
-
-
-        video.playsInline =
-            true;
-
-
-        video.setAttribute(
-            "autoplay",
-            ""
-        );
-
-
-        video.setAttribute(
-            "muted",
-            ""
-        );
-
-
-        video.setAttribute(
-            "playsinline",
-            ""
-        );
-
-
-        video.setAttribute(
-            "webkit-playsinline",
-            ""
-        );
-
-
-        container.appendChild(
-            video
-        );
-
-
-        /* ---------------------------------------------
-           CAMERA SETTINGS
-        --------------------------------------------- */
-
-        const constraints = {
-
-            audio: false,
-
-            video: {
-
-                facingMode: {
-                    ideal: "environment"
-                },
-
-                width: {
-                    ideal: 1280
-                },
-
-                height: {
-                    ideal: 720
-                }
-
-            }
-
-        };
-
-
-        /* ---------------------------------------------
-           MỞ CAMERA
-        --------------------------------------------- */
-
-        stream =
-            await navigator.mediaDevices
-                .getUserMedia(
-                    constraints
-                );
-
-
-        video.srcObject =
-            stream;
-
-
-        /* ---------------------------------------------
-           CHỜ VIDEO
-        --------------------------------------------- */
-
-        await new Promise(
-            function(resolve) {
-
-                video.onloadedmetadata =
-                    function() {
-
-                        resolve();
-
-                    };
-
-            }
-        );
-
-
-        await video.play();
-
-
-        /* ---------------------------------------------
-           CAMERA ĐÃ SẴN SÀNG
-        --------------------------------------------- */
-
-        running = true;
-
-
-        document.getElementById(
-            "startButton"
-        ).disabled = true;
-
-
-        document.getElementById(
-            "stopButton"
-        ).disabled = false;
+        await predictImage(image);
 
 
         document.getElementById(
             "status"
         ).innerText =
-            "🟢 AI đang nhận diện";
+            "🟢 Đã nhận diện xong";
 
-
-        console.log(
-            "CAMERA:",
-            video.videoWidth,
-            "x",
-            video.videoHeight
-        );
-
-
-        /* ---------------------------------------------
-           BẮT ĐẦU AI
-        --------------------------------------------- */
-
-        predictLoop();
 
     }
 
     catch (error) {
 
         console.error(
-            "LỖI CAMERA:",
+            "LỖI NHẬN DIỆN:",
             error
         );
-
-
-        running = false;
 
 
         document.getElementById(
             "status"
         ).innerText =
-            "❌ Không thể mở camera";
+            "❌ Không thể phân tích ảnh";
 
 
-        let message =
-            "Không thể mở camera.";
-
-
-        if (
-            error.name ===
-            "NotAllowedError"
-        ) {
-
-            message =
-                "Bạn chưa cho phép website sử dụng camera. Hãy vào cài đặt quyền camera của trình duyệt và cho phép.";
-
-        }
-
-        else if (
-            error.name ===
-            "NotFoundError"
-        ) {
-
-            message =
-                "Không tìm thấy camera trên thiết bị.";
-
-        }
-
-        else if (
-            error.name ===
-            "NotReadableError"
-        ) {
-
-            message =
-                "Camera đang được sử dụng bởi ứng dụng khác.";
-
-        }
-
-        else if (
-            error.name ===
-            "SecurityError"
-        ) {
-
-            message =
-                "Trình duyệt chặn camera. Hãy mở website bằng HTTPS.";
-
-        }
-
-
-        alert(message);
+        alert(
+            "Không thể phân tích ảnh. Hãy thử chụp lại ảnh rõ hơn."
+        );
 
     }
 
 }
 
 
-/* =====================================================
-   AI LOOP
-===================================================== */
+/*
+=====================================================
+CHỜ ẢNH LOAD
+=====================================================
+*/
 
-async function predictLoop() {
+function waitForImage(image) {
 
-    if (!running) {
+    return new Promise(
+        function(resolve, reject) {
 
-        return;
+            if (image.complete) {
 
-    }
+                resolve();
 
+                return;
 
-    try {
-
-        await predict();
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "LỖI AI:",
-            error
-        );
-
-    }
+            }
 
 
-    animationId =
-        requestAnimationFrame(
-            predictLoop
-        );
+            image.onload =
+                function() {
+
+                    resolve();
+
+                };
+
+
+            image.onerror =
+                function() {
+
+                    reject(
+                        new Error(
+                            "Không thể tải ảnh."
+                        )
+                    );
+
+                };
+
+        }
+    );
 
 }
 
 
-/* =====================================================
-   PREDICT
-===================================================== */
+/*
+=====================================================
+AI NHẬN DIỆN ẢNH
+=====================================================
+*/
 
-async function predict() {
+async function predictImage(image) {
 
-    if (
-        !model ||
-        !video ||
-        video.readyState < 2
-    ) {
 
-        return;
+    if (!model) {
+
+        await loadModel();
 
     }
 
+
+    /*
+    Teachable Machine nhận ảnh
+    */
 
     const predictions =
         await model.predict(
-            video
+            image
         );
 
+
+    /*
+    =============================================
+    TÌM CLASS CAO NHẤT
+    =============================================
+    */
 
     let best =
         predictions[0];
@@ -904,6 +877,12 @@ async function predict() {
     }
 
 
+    /*
+    =============================================
+    CHUẨN HÓA CLASS
+    =============================================
+    */
+
     const rawName =
         best.className;
 
@@ -922,12 +901,33 @@ async function predict() {
 
 
     console.log(
+        "=========================="
+    );
+
+
+    console.log(
         "CLASS:",
-        rawName,
-        "|",
+        rawName
+    );
+
+
+    console.log(
+        "CLASS CHUẨN HÓA:",
+        name
+    );
+
+
+    console.log(
+        "ĐỘ CHÍNH XÁC:",
         percent + "%"
     );
 
+
+    /*
+    =============================================
+    HIỂN THỊ KẾT QUẢ
+    =============================================
+    */
 
     document.getElementById(
         "result-name"
@@ -945,52 +945,82 @@ async function predict() {
         "%";
 
 
-    /* =================================================
-       IF ELSE PHÂN LOẠI
-    ================================================= */
+    /*
+    =============================================
+    IF ELSE PHÂN LOẠI
+    =============================================
+    */
 
     if (name === "quế") {
 
-        showPlantInfo("quế");
+        showPlantInfo(
+            "quế"
+        );
 
     }
 
-    else if (name === "la hán quả") {
+    else if (
+        name === "la hán quả"
+    ) {
 
-        showPlantInfo("la hán quả");
-
-    }
-
-    else if (name === "táo tàu") {
-
-        showPlantInfo("táo tàu");
+        showPlantInfo(
+            "la hán quả"
+        );
 
     }
 
-    else if (name === "đại táo") {
+    else if (
+        name === "táo tàu"
+    ) {
 
-        showPlantInfo("đại táo");
-
-    }
-
-    else if (name === "rễ tranh") {
-
-        showPlantInfo("rễ tranh");
+        showPlantInfo(
+            "táo tàu"
+        );
 
     }
 
-    else if (name === "nothing") {
+    else if (
+        name === "đại táo"
+    ) {
 
-        showPlantInfo("nothing");
+        showPlantInfo(
+            "đại táo"
+        );
+
+    }
+
+    else if (
+        name === "rễ tranh"
+    ) {
+
+        showPlantInfo(
+            "rễ tranh"
+        );
+
+    }
+
+    else if (
+        name === "nothing"
+    ) {
+
+        showPlantInfo(
+            "nothing"
+        );
 
     }
 
     else {
 
-        showPlantInfo("unknown");
+        showPlantInfo(
+            "unknown"
+        );
 
     }
 
+
+    /*
+    Hiển thị toàn bộ xác suất
+    */
 
     showPredictions(
         predictions
@@ -999,26 +1029,39 @@ async function predict() {
 }
 
 
-/* =====================================================
-   EMOJI
-===================================================== */
+/*
+=====================================================
+EMOJI
+=====================================================
+*/
 
 function getEmoji(name) {
 
-    if (name === "quế") {
+    if (
+        name === "quế"
+    ) {
 
         return "🌿";
 
     }
 
-    else if (name === "la hán quả") {
+    else if (
+        name === "la hán quả"
+    ) {
 
         return "🍈";
 
     }
 
     else if (
-        name === "táo tàu" ||
+        name === "táo tàu"
+    ) {
+
+        return "🍎";
+
+    }
+
+    else if (
         name === "đại táo"
     ) {
 
@@ -1026,26 +1069,33 @@ function getEmoji(name) {
 
     }
 
-    else if (name === "rễ tranh") {
+    else if (
+        name === "rễ tranh"
+    ) {
 
         return "🌱";
 
     }
 
-    else if (name === "nothing") {
+    else if (
+        name === "nothing"
+    ) {
 
         return "❌";
 
     }
+
 
     return "🌿";
 
 }
 
 
-/* =====================================================
-   THÔNG TIN DƯỢC LIỆU
-===================================================== */
+/*
+=====================================================
+THÔNG TIN DƯỢC LIỆU
+=====================================================
+*/
 
 function showPlantInfo(name) {
 
@@ -1055,51 +1105,87 @@ function showPlantInfo(name) {
         );
 
 
-    if (name === "quế") {
+    /*
+    ==========================================
+    QUẾ
+    ==========================================
+    */
+
+    if (
+        name === "quế"
+    ) {
 
         info.innerHTML = `
 
-            <h3>🌿 quế</h3>
+            <h3>
+                🌿 quế
+            </h3>
 
             <div class="info-row">
+
                 <b>🔬 tên khoa học:</b>
+
                 Cinnamomum spp.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌿 họ thực vật:</b>
+
                 Lauraceae
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📖 mô tả:</b>
+
                 Quế là nhóm cây thuộc chi
                 Cinnamomum. Vỏ cây có
                 mùi thơm đặc trưng.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🍃 đặc điểm:</b>
+
                 Cây thường là cây thân gỗ,
                 vỏ có mùi thơm và lá có
                 các đường gân rõ.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌱 bộ phận thường dùng:</b>
+
                 Vỏ cây.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📚 thông tin:</b>
+
                 Quế thường được sử dụng làm
                 gia vị và trong một số sản phẩm
                 truyền thống.
+
             </div>
 
+
             <div class="warning">
+
                 ⚠️ Thông tin chỉ mang tính tham khảo,
                 không thay thế tư vấn y tế.
+
             </div>
 
         `;
@@ -1107,49 +1193,85 @@ function showPlantInfo(name) {
     }
 
 
-    else if (name === "la hán quả") {
+    /*
+    ==========================================
+    LA HÁN QUẢ
+    ==========================================
+    */
+
+    else if (
+        name === "la hán quả"
+    ) {
 
         info.innerHTML = `
 
-            <h3>🍈 la hán quả</h3>
+            <h3>
+                🍈 la hán quả
+            </h3>
 
             <div class="info-row">
+
                 <b>🔬 tên khoa học:</b>
+
                 Siraitia grosvenorii
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌿 họ thực vật:</b>
+
                 Cucurbitaceae
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📖 mô tả:</b>
+
                 La hán quả là quả của một
                 loài cây dây leo thuộc họ
                 Bầu bí.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🍈 đặc điểm:</b>
+
                 Quả có hình tròn và vỏ cứng.
                 Quả khô thường có màu nâu.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌱 bộ phận thường dùng:</b>
+
                 Quả.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📚 thông tin:</b>
+
                 Quả thường được sử dụng trong
                 thực phẩm và đồ uống để tạo vị ngọt.
+
             </div>
 
+
             <div class="warning">
+
                 ⚠️ Thông tin chỉ mang tính tham khảo,
                 không thay thế tư vấn y tế.
+
             </div>
 
         `;
@@ -1157,50 +1279,86 @@ function showPlantInfo(name) {
     }
 
 
-    else if (name === "táo tàu") {
+    /*
+    ==========================================
+    TÁO TÀU
+    ==========================================
+    */
+
+    else if (
+        name === "táo tàu"
+    ) {
 
         info.innerHTML = `
 
-            <h3>🍎 táo tàu</h3>
+            <h3>
+                🍎 táo tàu
+            </h3>
 
             <div class="info-row">
+
                 <b>🔬 tên khoa học:</b>
+
                 Ziziphus jujuba
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌿 họ thực vật:</b>
+
                 Rhamnaceae
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📖 mô tả:</b>
+
                 Táo tàu là quả của cây
                 Ziziphus jujuba, thường được
                 sử dụng ở dạng tươi hoặc khô.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🍎 đặc điểm:</b>
+
                 Quả có hình tròn hoặc bầu dục.
                 Khi chín thường có màu đỏ nâu
                 và vị ngọt.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌱 bộ phận thường dùng:</b>
+
                 Quả.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📚 thông tin:</b>
+
                 Thường được sử dụng trong thực phẩm
                 và một số bài thuốc cổ truyền.
+
             </div>
 
+
             <div class="warning">
+
                 ⚠️ Thông tin chỉ mang tính tham khảo,
                 không thay thế tư vấn y tế.
+
             </div>
 
         `;
@@ -1208,50 +1366,86 @@ function showPlantInfo(name) {
     }
 
 
-    else if (name === "đại táo") {
+    /*
+    ==========================================
+    ĐẠI TÁO
+    ==========================================
+    */
+
+    else if (
+        name === "đại táo"
+    ) {
 
         info.innerHTML = `
 
-            <h3>🍎 đại táo</h3>
+            <h3>
+                🍎 đại táo
+            </h3>
 
             <div class="info-row">
+
                 <b>🔬 tên khoa học:</b>
+
                 Ziziphus jujuba
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌿 họ thực vật:</b>
+
                 Rhamnaceae
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📖 mô tả:</b>
+
                 Đại táo là quả của cây
                 Ziziphus jujuba, thường được
                 sử dụng ở dạng tươi hoặc khô.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🍎 đặc điểm:</b>
+
                 Quả có hình tròn hoặc bầu dục.
                 Khi chín có màu đỏ nâu
                 và vị ngọt.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌱 bộ phận thường dùng:</b>
+
                 Quả.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📚 thông tin:</b>
+
                 Thường được sử dụng trong thực phẩm
                 và y học cổ truyền.
+
             </div>
 
+
             <div class="warning">
+
                 ⚠️ Thông tin chỉ mang tính tham khảo,
                 không thay thế tư vấn y tế.
+
             </div>
 
         `;
@@ -1259,49 +1453,85 @@ function showPlantInfo(name) {
     }
 
 
-    else if (name === "rễ tranh") {
+    /*
+    ==========================================
+    RỄ TRANH
+    ==========================================
+    */
+
+    else if (
+        name === "rễ tranh"
+    ) {
 
         info.innerHTML = `
 
-            <h3>🌱 rễ tranh</h3>
+            <h3>
+                🌱 rễ tranh
+            </h3>
 
             <div class="info-row">
+
                 <b>🔬 tên khoa học:</b>
+
                 Imperata cylindrica
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌿 tên thường gọi:</b>
+
                 Cỏ tranh
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📖 mô tả:</b>
+
                 Rễ tranh là phần thân rễ của
                 cây cỏ tranh, một loài cỏ
                 sống lâu năm.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🍃 đặc điểm:</b>
+
                 Cây có lá dài và hẹp,
                 thân rễ phát triển dưới đất.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>🌱 bộ phận thường dùng:</b>
+
                 Thân rễ.
+
             </div>
 
+
             <div class="info-row">
+
                 <b>📚 thông tin:</b>
+
                 Được sử dụng trong một số bài thuốc
                 dân gian và y học cổ truyền.
+
             </div>
 
+
             <div class="warning">
+
                 ⚠️ Thông tin chỉ mang tính tham khảo,
                 không thay thế tư vấn y tế.
+
             </div>
 
         `;
@@ -1309,7 +1539,15 @@ function showPlantInfo(name) {
     }
 
 
-    else if (name === "nothing") {
+    /*
+    ==========================================
+    NOTHING
+    ==========================================
+    */
+
+    else if (
+        name === "nothing"
+    ) {
 
         info.innerHTML = `
 
@@ -1329,9 +1567,9 @@ function showPlantInfo(name) {
                 </p>
 
                 <p>
-                    Hãy đưa dược liệu vào
-                    giữa khung hình để AI
-                    nhận diện.
+                    Hãy chụp lại ảnh dược liệu
+                    rõ hơn và đưa vật thể vào
+                    giữa khung hình.
                 </p>
 
             </div>
@@ -1340,6 +1578,12 @@ function showPlantInfo(name) {
 
     }
 
+
+    /*
+    ==========================================
+    UNKNOWN
+    ==========================================
+    */
 
     else {
 
@@ -1366,11 +1610,15 @@ function showPlantInfo(name) {
 }
 
 
-/* =====================================================
-   HIỂN THỊ CÁC CLASS
-===================================================== */
+/*
+=====================================================
+HIỂN THỊ XÁC SUẤT
+=====================================================
+*/
 
-function showPredictions(predictions) {
+function showPredictions(
+    predictions
+) {
 
     const container =
         document.getElementById(
@@ -1378,8 +1626,13 @@ function showPredictions(predictions) {
         );
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
+
+    /*
+    Sắp xếp từ cao xuống thấp
+    */
 
     const sorted =
         [...predictions].sort(
@@ -1464,90 +1717,65 @@ function showPredictions(predictions) {
 }
 
 
-/* =====================================================
-   STOP CAMERA
-===================================================== */
+/*
+=====================================================
+XÓA ẢNH
+=====================================================
+*/
 
-function stopCamera() {
-
-    running = false;
+function clearPhoto() {
 
 
-    if (animationId !== null) {
-
-        cancelAnimationFrame(
-            animationId
+    const input =
+        document.getElementById(
+            "photoInput"
         );
 
-        animationId = null;
 
-    }
-
-
-    /* ---------------------------------------------
-       TẮT CAMERA STREAM
-    --------------------------------------------- */
-
-    if (stream !== null) {
-
-        stream
-            .getTracks()
-            .forEach(
-                function(track) {
-
-                    track.stop();
-
-                }
-            );
+    const image =
+        document.getElementById(
+            "preview-image"
+        );
 
 
-        stream = null;
-
-    }
-
-
-    if (video !== null) {
-
-        video.srcObject = null;
-
-        video = null;
-
-    }
+    const placeholder =
+        document.getElementById(
+            "photo-placeholder"
+        );
 
 
-    document.getElementById(
-        "webcam-container"
-    ).innerHTML = `
+    /*
+    Xóa file đã chọn
+    */
 
-        <div class="camera-placeholder">
-
-            <div class="camera-icon">
-                📷
-            </div>
-
-            <p>
-                Camera đã dừng
-            </p>
-
-        </div>
-
-    `;
+    input.value =
+        "";
 
 
-    document.getElementById(
-        "startButton"
-    ).disabled = false;
+    /*
+    Xóa ảnh
+    */
+
+    image.src =
+        "";
 
 
-    document.getElementById(
-        "stopButton"
-    ).disabled = true;
+    image.style.display =
+        "none";
 
+
+    placeholder.style.display =
+        "block";
+
+
+    /*
+    Reset trạng thái
+    */
 
     document.getElementById(
         "status"
     ).innerText =
-        "Camera đã dừng";
+        "Chưa chụp ảnh";
 
 
     document.getElementById(
@@ -1571,7 +1799,8 @@ function stopCamera() {
         </h3>
 
         <p>
-            Hãy bắt đầu camera để nhận diện.
+            Hãy chụp ảnh dược liệu
+            để AI nhận diện.
         </p>
 
     `;
@@ -1581,11 +1810,14 @@ function stopCamera() {
         "predictions"
     ).innerHTML = `
 
-        <p style="
-            text-align:center;
-            color:#777;
-        ">
+        <p
+            style="
+                text-align:center;
+                color:#777;
+            ">
+
             Chưa có dữ liệu
+
         </p>
 
     `;
@@ -1593,23 +1825,11 @@ function stopCamera() {
 }
 
 
-/* =====================================================
-   XỬ LÝ KHI RỜI TRANG
-===================================================== */
-
-window.addEventListener(
-    "pagehide",
-    function() {
-
-        stopCamera();
-
-    }
-);
-
-
-/* =====================================================
-   DEBUG
-===================================================== */
+/*
+=====================================================
+DEBUG
+=====================================================
+*/
 
 console.log(
     "🌿 AI Nhận Diện Dược Liệu"
@@ -1621,8 +1841,8 @@ console.log(
 );
 
 console.log(
-    "Camera:",
-    "native getUserMedia"
+    "Phương thức:",
+    "Chụp ảnh → Teachable Machine → nhận diện"
 );
 
 console.log(
@@ -1639,5 +1859,7 @@ console.log(
 
 </script>
 
+
 </body>
+
 </html>
